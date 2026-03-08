@@ -1,0 +1,44 @@
+:root {
+    /* Helldivers 2 inspired palette */
+    --color-bg: #0a0a0f;
+    --color-surface: #14141f;
+    --color-surface-elevated: #1e1e2e;
+    --color-border: #2a2a3a;
+    --color-primary: #f5c518;
+    --color-primary-hover: #ffd84d;
+    --color-primary-dim: rgba(245, 197, 24, 0.15);
+    --color-text: #e8e8e8;
+    --color-text-muted: #888898;
+    --color-danger: #ff4444;
+    --color-success: #44ff88;
+
+    /* Stratagem category colors */
+    --color-support-weapon: #4a9eff;
+    --color-orbital: #ff6b35;
+    --color-eagle: #ff4444;
+    --color-sentry: #44cc44;
+    --color-backpack: #aa66ff;
+    --color-vehicle: #ffaa00;
+    --color-emplacement: #66cccc;
+
+    /* Spacing */
+    --space-xs: 4px;
+    --space-sm: 8px;
+    --space-md: 16px;
+    --space-lg: 24px;
+    --space-xl: 32px;
+    --space-2xl: 48px;
+
+    /* Typography */
+    --font-main: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    --font-mono: 'Consolas', 'Courier New', monospace;
+
+    /* Border radius */
+    --radius-sm: 4px;
+    --radius-md: 8px;
+    --radius-lg: 12px;
+
+    /* Transitions */
+    --transition-fast: 150ms ease;
+    --transition-normal: 250ms ease;
+}

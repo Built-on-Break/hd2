@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HD2 Loadout Randomizer</title>
+    <link rel="stylesheet" href="css/variables.css">
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <div class="app">
+        <!-- Header -->
+        <header class="header">
+            <img src="https://helldivers.wiki.gg/images/Super_Earth_Icon.svg" alt="Super Earth" class="header__logo">
+            <h1 class="header__title">Helldivers 2 Loadout Randomizer</h1>
+            <p class="header__subtitle">Spread democracy with a random loadout</p>
+        </header>
+
+        <!-- Mode Selector -->
+        <div class="mode-selector">
+            <button class="mode-btn active" id="mode-balanced" data-mode="balanced">Balanced</button>
+            <button class="mode-btn" id="mode-chaos" data-mode="chaos">Chaos</button>
+        </div>
+
+        <!-- Error Message -->
+        <div class="error-message" id="error-message"></div>
+
+        <!-- Empty State -->
+        <div class="loadout-empty" id="loadout-empty">
+            <button class="loadout-empty__dice" id="dice-btn" aria-label="Randomize loadout">
+                <svg width="56" height="56" viewBox="0 0 100 100" fill="none">
+                    <rect x="8" y="8" width="84" height="84" rx="14" stroke="currentColor" stroke-width="5"/>
+                    <circle cx="30" cy="30" r="7" fill="currentColor"/>
+                    <circle cx="70" cy="30" r="7" fill="currentColor"/>
+                    <circle cx="50" cy="50" r="7" fill="currentColor"/>
+                    <circle cx="30" cy="70" r="7" fill="currentColor"/>
+                    <circle cx="70" cy="70" r="7" fill="currentColor"/>
+                </svg>
+            </button>
+            <p class="loadout-empty__text">Roll for Democracy</p>
+        </div>
+
+        <!-- Loadout Display -->
+        <div class="loadout loadout--hidden" id="loadout-display">
+            <!-- Equipment Row -->
+            <div class="loadout__section-label">Equipment</div>
+            <div class="loadout__row loadout__row--equipment" id="equipment-row">
+                <div class="loadout-card" id="card-primary">
+                    <div class="loadout-card__label">Primary</div>
+                    <div class="loadout-card__image"><img src="images/placeholder.png" alt=""></div>
+                    <div class="loadout-card__name">--</div>
+                </div>
+                <div class="loadout-card" id="card-secondary">
+                    <div class="loadout-card__label">Secondary</div>
+                    <div class="loadout-card__image"><img src="images/placeholder.png" alt=""></div>
+                    <div class="loadout-card__name">--</div>
+                </div>
+                <div class="loadout-card" id="card-throwable">
+                    <div class="loadout-card__label">Throwable</div>
+                    <div class="loadout-card__image"><img src="images/placeholder.png" alt=""></div>
+                    <div class="loadout-card__name">--</div>
+                </div>
+                <div class="loadout-card" id="card-armor">
+                    <div class="loadout-card__label">Armor</div>
+                    <div class="loadout-card__image"><img src="images/placeholder.png" alt=""></div>
+                    <div class="loadout-card__name">--</div>
+                </div>
+            </div>
+
+            <!-- Stratagems Row -->
+            <div class="loadout__section-label">Stratagems</div>
+            <div class="loadout__row loadout__row--stratagems" id="stratagems-row">
+                <div class="loadout-card" id="card-strat-0">
+                    <div class="loadout-card__label">Stratagem 1</div>
+                    <div class="loadout-card__image"><img src="images/placeholder.png" alt=""></div>
+                    <div class="loadout-card__name">--</div>
+                </div>
+                <div class="loadout-card" id="card-strat-1">
+                    <div class="loadout-card__label">Stratagem 2</div>
+                    <div class="loadout-card__image"><img src="images/placeholder.png" alt=""></div>
+                    <div class="loadout-card__name">--</div>
+                </div>
+                <div class="loadout-card" id="card-strat-2">
+                    <div class="loadout-card__label">Stratagem 3</div>
+                    <div class="loadout-card__image"><img src="images/placeholder.png" alt=""></div>
+                    <div class="loadout-card__name">--</div>
+                </div>
+                <div class="loadout-card" id="card-strat-3">
+                    <div class="loadout-card__label">Stratagem 4</div>
+                    <div class="loadout-card__image"><img src="images/placeholder.png" alt=""></div>
+                    <div class="loadout-card__name">--</div>
+                </div>
+            </div>
+
+            <!-- Booster Row -->
+            <div class="loadout__section-label">Booster</div>
+            <div class="loadout__row loadout__row--booster">
+                <div class="loadout-card" id="card-booster">
+                    <div class="loadout-card__label">Booster</div>
+                    <div class="loadout-card__image"><img src="images/placeholder.png" alt=""></div>
+                    <div class="loadout-card__name">--</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Randomize Button -->
+        <div class="randomize-section">
+            <button class="randomize-btn" id="randomize-btn">Randomize!</button>
+        </div>
+
+        <!-- Filter Panel -->
+        <div class="filter-panel" id="filter-panel">
+            <div class="filter-panel__header" id="filter-panel-header">
+                <span class="filter-panel__title">Item Filters</span>
+                <span class="filter-panel__toggle-icon">&#9660;</span>
+            </div>
+            <div class="filter-panel__content" id="filter-panel-content">
+                <div class="filter-actions">
+                    <button class="filter-actions__btn" id="filter-select-all">Select All</button>
+                    <button class="filter-actions__btn" id="filter-deselect-all">Deselect All</button>
+                </div>
+                <div id="warbond-filters"></div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>Game data sourced from the <a href="https://helldivers.wiki.gg" target="_blank" rel="noopener">Helldivers Wiki</a></p>
+            <p>Not affiliated with Arrowhead Game Studios or Sony</p>
+        </footer>
+    </div>
+
+    <!-- Data files -->
+    <script src="js/data/warbonds.js"></script>
+    <script src="js/data/primaryWeapons.js"></script>
+    <script src="js/data/secondaryWeapons.js"></script>
+    <script src="js/data/throwables.js"></script>
+    <script src="js/data/stratagems.js"></script>
+    <script src="js/data/boosters.js"></script>
+    <script src="js/data/armor.js"></script>
+
+    <!-- Logic files -->
+    <script src="js/storage.js"></script>
+    <script src="js/filters.js"></script>
+    <script src="js/randomizer.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>

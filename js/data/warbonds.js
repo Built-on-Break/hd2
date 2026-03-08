@@ -1,0 +1,26 @@
+window.HD2Data = window.HD2Data || {};
+window.HD2Data.warbonds = [
+    { id: "base", name: "Base Game", type: "base", image: null, icon: "https://helldivers.wiki.gg/images/Super_Earth_Icon.svg" },
+    { id: "helldivers-mobilize", name: "Helldivers Mobilize!", type: "free", image: "https://helldivers.wiki.gg/images/Helldivers_Mobilize_Warbond_Cover.png" },
+    { id: "steeled-veterans", name: "Steeled Veterans", type: "premium", image: "https://helldivers.wiki.gg/images/Steeled_Veterans_Premium_Warbond_Cover.png" },
+    { id: "cutting-edge", name: "Cutting Edge", type: "premium", image: "https://helldivers.wiki.gg/images/Cutting_Edge_Premium_Warbond_Cover.png" },
+    { id: "democratic-detonation", name: "Democratic Detonation", type: "premium", image: "https://helldivers.wiki.gg/images/Democratic_Detonation_Premium_Warbond_Cover.png" },
+    { id: "polar-patriots", name: "Polar Patriots", type: "premium", image: "https://helldivers.wiki.gg/images/Polar_Patriots_Premium_Warbond_Cover.png" },
+    { id: "viper-commandos", name: "Viper Commandos", type: "premium", image: "https://helldivers.wiki.gg/images/Viper_Commandos_Premium_Warbond_Cover.png" },
+    { id: "freedoms-flame", name: "Freedom's Flame", type: "premium", image: "https://helldivers.wiki.gg/images/Freedom%27s_Flame_Premium_Warbond_Cover.png" },
+    { id: "chemical-agents", name: "Chemical Agents", type: "premium", image: "https://helldivers.wiki.gg/images/Chemical_Agents_Premium_Warbond_Cover.png" },
+    { id: "truth-enforcers", name: "Truth Enforcers", type: "premium", image: "https://helldivers.wiki.gg/images/Truth_Enforcers_Premium_Warbond_Cover.png" },
+    { id: "servants-of-freedom", name: "Servants of Freedom", type: "premium", image: "https://helldivers.wiki.gg/images/Servants_of_Freedom_Premium_Warbond_Cover.png" },
+    { id: "urban-legends", name: "Urban Legends", type: "premium", image: "https://helldivers.wiki.gg/images/Urban_Legends_Premium_Warbond_Cover.png" },
+    { id: "borderline-justice", name: "Borderline Justice", type: "premium", image: "https://helldivers.wiki.gg/images/Borderline_Justice_Premium_Warbond_Cover.png" },
+    { id: "masters-of-ceremony", name: "Masters of Ceremony", type: "premium", image: "https://helldivers.wiki.gg/images/Masters_of_Ceremony_Premium_Warbond_Cover.png" },
+    { id: "force-of-law", name: "Force of Law", type: "premium", image: "https://helldivers.wiki.gg/images/thumb/Force_of_Law_Premium_Warbond_Cover.png/800px-Force_of_Law_Premium_Warbond_Cover.png" },
+    { id: "dust-devils", name: "Dust Devils", type: "premium", image: "https://helldivers.wiki.gg/images/thumb/Dust_Devils_Premium_Warbond_Cover.png/800px-Dust_Devils_Premium_Warbond_Cover.png" },
+    { id: "control-group", name: "Control Group", type: "premium", image: "https://helldivers.wiki.gg/images/thumb/Control_Group_Premium_Warbond_Cover.png/800px-Control_Group_Premium_Warbond_Cover.png" },
+    { id: "python-commandos", name: "Python Commandos", type: "premium", image: "https://helldivers.wiki.gg/images/thumb/Python_Commandos_Premium_Warbond_Cover.png/800px-Python_Commandos_Premium_Warbond_Cover.png" },
+    { id: "redacted-regiment", name: "Redacted Regiment", type: "premium", image: "https://helldivers.wiki.gg/images/thumb/Redacted_Regiment_Premium_Warbond_Cover.png/800px-Redacted_Regiment_Premium_Warbond_Cover.png" },
+    { id: "siege-breakers", name: "Siege Breakers", type: "premium", image: "https://helldivers.wiki.gg/images/thumb/Siege_Breakers_Premium_Warbond_Cover.png/800px-Siege_Breakers_Premium_Warbond_Cover.png" },
+    { id: "halo-odst", name: "Halo: ODST", type: "legendary", image: "https://helldivers.wiki.gg/images/thumb/Halo_ODST_Legendary_Warbond_Cover.png/800px-Halo_ODST_Legendary_Warbond_Cover.png" },
+    { id: "killzone", name: "Killzone", type: "legendary", image: "https://helldivers.wiki.gg/images/thumb/Righteous_Revenants_Legendary_Warbond_Cover.png/639px-Righteous_Revenants_Legendary_Warbond_Cover.png" },
+    { id: "superstore", name: "Superstore", type: "superstore", image: null, icon: "https://helldivers.wiki.gg/images/Super_Credit.svg" }
+];
