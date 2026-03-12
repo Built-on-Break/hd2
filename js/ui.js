@@ -225,16 +225,28 @@ window.HD2UI = (function () {
             var stopDelay = 400 + index * 150;
             setTimeout(function () {
                 clearInterval(intervalId);
+                // Set final content while still blurred so image can load
                 nameEl.textContent = finals[index].name;
                 imgEl.src = finals[index].image;
-                imgEl.style.filter = '';
-                card.classList.remove('card--spinning');
-                card.classList.add('card--locked');
 
-                // Clean up locked class after animation
-                setTimeout(function () {
-                    card.classList.remove('card--locked');
-                }, 400);
+                // Wait for image to load before revealing
+                var reveal = function () {
+                    card.classList.remove('card--spinning');
+                    card.classList.add('card--locked');
+                    setTimeout(function () {
+                        card.classList.remove('card--locked');
+                    }, 400);
+                };
+
+                if (imgEl.complete) {
+                    // Image already cached, reveal after a tiny paint delay
+                    requestAnimationFrame(reveal);
+                } else {
+                    imgEl.onload = reveal;
+                    imgEl.onerror = reveal;
+                    // Fallback in case load event doesn't fire
+                    setTimeout(reveal, 150);
+                }
             }, stopDelay);
         });
     }
