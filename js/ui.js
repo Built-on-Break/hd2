@@ -239,30 +239,34 @@ window.HD2UI = (function () {
 
             // Lock in after staggered delay
             var stopDelay = 400 + index * 150;
+            var revealDelay = stopDelay + 150;
 
             // Phase 1: Stop cycling, set final content (still blurred)
-            // Phase 2: Reveal once image is decoded (or after timeout)
             setTimeout(function () {
                 clearInterval(intervalId);
                 nameEl.textContent = finals[index].name;
                 imgEl.onerror = null;
                 imgEl.onload = null;
                 imgEl.src = finals[index].image;
-
-                function reveal() {
-                    card.classList.remove('card--spinning');
-                    card.classList.add('card--locked');
-                    setTimeout(function () {
-                        card.classList.remove('card--locked');
-                    }, 400);
-                }
-
-                if (imgEl.decode) {
-                    imgEl.decode().then(reveal, reveal);
-                } else {
-                    setTimeout(reveal, 120);
-                }
             }, stopDelay);
+
+            // Phase 2: Reveal at fixed time, but wait for decode first
+            (function (c, el) {
+                setTimeout(function () {
+                    function reveal() {
+                        c.classList.remove('card--spinning');
+                        c.classList.add('card--locked');
+                        setTimeout(function () {
+                            c.classList.remove('card--locked');
+                        }, 400);
+                    }
+                    if (el.decode) {
+                        el.decode().then(reveal, reveal);
+                    } else {
+                        reveal();
+                    }
+                }, revealDelay);
+            })(card, imgEl);
         });
     }
 
@@ -303,14 +307,16 @@ window.HD2UI = (function () {
         }, 80);
 
         // Phase 1: Stop cycling, set final content (still blurred)
-        // Phase 2: Reveal once image is decoded
         setTimeout(function () {
             clearInterval(intervalId);
             nameEl.textContent = finalName;
             imgEl.onerror = null;
             imgEl.onload = null;
             imgEl.src = finalImage;
+        }, 500);
 
+        // Phase 2: Reveal at fixed time, but wait for decode first
+        setTimeout(function () {
             function reveal() {
                 card.classList.remove('card--spinning');
                 card.classList.add('card--locked');
@@ -322,9 +328,9 @@ window.HD2UI = (function () {
             if (imgEl.decode) {
                 imgEl.decode().then(reveal, reveal);
             } else {
-                setTimeout(reveal, 120);
+                reveal();
             }
-        }, 500);
+        }, 650);
     }
 
     /**
