@@ -162,6 +162,16 @@ button {
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
 }
 
+.loadout:not(.loadout--hidden) .loadout-card {
+    cursor: pointer;
+}
+
+.loadout:not(.loadout--hidden) .loadout-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+    border-color: rgba(245, 197, 24, 0.35);
+}
+
 .loadout-card:hover {
     transform: translateY(-2px);
     box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);

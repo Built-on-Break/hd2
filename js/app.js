@@ -4,6 +4,7 @@
 (function () {
     var currentMode = 'balanced';
     var isFirstRandomize = true;
+    var currentResult = null;
 
     function doRandomize() {
         HD2UI.hideError();
@@ -14,6 +15,8 @@
             HD2UI.showError(result.error);
             return;
         }
+
+        currentResult = result;
 
         // Remove pulse from randomize button
         document.getElementById('randomize-btn').classList.remove('randomize-btn--pulse');
@@ -72,6 +75,57 @@
                 doRandomize();
             });
         }
+    }
+
+    function getSlotType(cardId) {
+        var map = {
+            'card-primary': 'primary',
+            'card-secondary': 'secondary',
+            'card-throwable': 'throwable',
+            'card-armor': 'armor',
+            'card-booster': 'booster',
+            'card-strat-0': 'strat-0',
+            'card-strat-1': 'strat-1',
+            'card-strat-2': 'strat-2',
+            'card-strat-3': 'strat-3'
+        };
+        return map[cardId] || null;
+    }
+
+    function initCardClickHandlers() {
+        document.querySelectorAll('.loadout-card').forEach(function (card) {
+            card.addEventListener('click', function () {
+                if (!currentResult) return;
+
+                var slotType = getSlotType(card.id);
+                if (!slotType) return;
+
+                HD2UI.hideError();
+                var reroll = HD2Randomizer.rerollSlot(slotType, currentResult, currentMode);
+
+                if (reroll.error) {
+                    HD2UI.showError(reroll.error);
+                    return;
+                }
+
+                // Update currentResult
+                if (reroll.key === 'strat') {
+                    currentResult.stratagems[reroll.index] = reroll.item;
+                } else {
+                    currentResult[reroll.key] = reroll.item;
+                }
+
+                // Re-render just this card
+                if (card.id === 'card-armor') {
+                    HD2UI.renderArmorCard(reroll.item);
+                } else {
+                    var label = card.querySelector('.loadout-card__label').textContent;
+                    HD2UI.renderCard(card.id, reroll.item, label);
+                }
+
+                HD2UI.casinoRevealSingleCard(card.id);
+            });
+        });
     }
 
     function initFilterPanel() {
@@ -160,5 +214,6 @@
         initFilterPanel();
         initRandomizeButton();
         initDiceButton();
+        initCardClickHandlers();
     });
 })();

@@ -258,6 +258,57 @@ window.HD2UI = (function () {
     }
 
     /**
+     * Casino reveal for a single card (used for slot rerolls).
+     */
+    function casinoRevealSingleCard(cardId) {
+        var card = document.getElementById(cardId);
+        if (!card) return;
+
+        // Clear any running global spin intervals
+        activeSpinIntervals.forEach(function (id) { clearInterval(id); });
+        activeSpinIntervals = [];
+
+        var nameEl = card.querySelector('.loadout-card__name');
+        var imgEl = card.querySelector('.loadout-card__image img');
+
+        var finalName = nameEl.textContent;
+        var finalImage = imgEl.src;
+
+        var cycleImages = shouldCycleImages(cardId);
+        var pool = getNamePoolForCard(cardId);
+
+        card.classList.remove('card--spinning', 'card--locked', 'card--rolling', 'card--revealed');
+        imgEl.onerror = null;
+        card.classList.add('card--spinning');
+
+        var intervalId = setInterval(function () {
+            var rand = pool[Math.floor(Math.random() * pool.length)];
+            nameEl.textContent = rand.name;
+            if (cycleImages) {
+                imgEl.src = rand.image;
+            }
+        }, 80);
+
+        // Phase 1: Stop cycling, set final content (still blurred)
+        setTimeout(function () {
+            clearInterval(intervalId);
+            nameEl.textContent = finalName;
+            imgEl.onerror = null;
+            imgEl.onload = null;
+            imgEl.src = finalImage;
+        }, 500);
+
+        // Phase 2: Reveal
+        setTimeout(function () {
+            card.classList.remove('card--spinning');
+            card.classList.add('card--locked');
+            setTimeout(function () {
+                card.classList.remove('card--locked');
+            }, 400);
+        }, 620);
+    }
+
+    /**
      * Set the active mode button.
      */
     function setActiveMode(mode) {
@@ -430,6 +481,7 @@ window.HD2UI = (function () {
     }
 
     return {
+        renderCard: renderCard,
         renderLoadout: renderLoadout,
         renderArmorCard: renderArmorCard,
         showError: showError,
@@ -437,6 +489,7 @@ window.HD2UI = (function () {
         animateCards: animateCards,
         staggerRevealCards: staggerRevealCards,
         casinoRevealCards: casinoRevealCards,
+        casinoRevealSingleCard: casinoRevealSingleCard,
         setActiveMode: setActiveMode,
         renderFilterPanel: renderFilterPanel,
         updateWarbondCheckboxState: updateWarbondCheckboxState,

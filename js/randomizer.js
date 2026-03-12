@@ -159,7 +159,97 @@ window.HD2Randomizer = (function () {
         return result;
     }
 
+    /**
+     * Reroll a single slot, returning the new item.
+     * slotType: 'primary', 'secondary', 'throwable', 'armor', 'booster', 'strat-0'..'strat-3'
+     */
+    function rerollSlot(slotType, currentResult, mode) {
+        var dataMap = {
+            'primary': HD2Data.primaryWeapons,
+            'secondary': HD2Data.secondaryWeapons,
+            'throwable': HD2Data.throwables,
+            'armor': HD2Data.armorCombos,
+            'booster': HD2Data.boosters
+        };
+
+        var resultKeyMap = {
+            'primary': 'primaryWeapon',
+            'secondary': 'secondaryWeapon',
+            'throwable': 'throwable',
+            'armor': 'armor',
+            'booster': 'booster'
+        };
+
+        // Non-stratagem slots
+        if (dataMap[slotType]) {
+            var pool = HD2Filters.getEnabledItems(dataMap[slotType]);
+            var currentItem = currentResult[resultKeyMap[slotType]];
+            var filtered = pool.filter(function (item) {
+                return item.id !== currentItem.id;
+            });
+            // Fall back to full pool if only 1 item enabled
+            var pick = pickRandom(filtered.length > 0 ? filtered : pool);
+            if (!pick) return { error: 'No items enabled for this slot.' };
+            return { item: pick, key: resultKeyMap[slotType] };
+        }
+
+        // Stratagem slots
+        var match = slotType.match(/^strat-(\d)$/);
+        if (match) {
+            var stratIndex = parseInt(match[1], 10);
+            var currentStrat = currentResult.stratagems[stratIndex];
+
+            // Build the other 3 stratagems
+            var others = [];
+            for (var i = 0; i < 4; i++) {
+                if (i !== stratIndex) others.push(currentResult.stratagems[i]);
+            }
+
+            var enabledStratagems = HD2Filters.getEnabledItems(HD2Data.stratagems);
+
+            var candidates;
+            if (mode === 'balanced') {
+                candidates = enabledStratagems.filter(function (s) {
+                    // No duplicates with the other 3
+                    for (var j = 0; j < others.length; j++) {
+                        if (others[j].id === s.id) return false;
+                    }
+                    // Exclude current for variety
+                    if (s.id === currentStrat.id) return false;
+                    // Check constraints against the other 3
+                    return !wouldViolateConstraints(s, others);
+                });
+            } else {
+                // Chaos: only avoid duplicates within the 4
+                candidates = enabledStratagems.filter(function (s) {
+                    for (var j = 0; j < others.length; j++) {
+                        if (others[j].id === s.id) return false;
+                    }
+                    if (s.id === currentStrat.id) return false;
+                    return true;
+                });
+            }
+
+            // Fall back to allowing same stratagem if no alternatives
+            if (candidates.length === 0) {
+                candidates = enabledStratagems.filter(function (s) {
+                    for (var j = 0; j < others.length; j++) {
+                        if (others[j].id === s.id) return false;
+                    }
+                    if (mode === 'balanced') return !wouldViolateConstraints(s, others);
+                    return true;
+                });
+            }
+
+            if (candidates.length === 0) return { error: 'No valid stratagems available for this slot.' };
+            return { item: pickRandom(candidates), key: 'strat', index: stratIndex };
+        }
+
+        return { error: 'Unknown slot type.' };
+    }
+
     return {
-        randomize: randomize
+        randomize: randomize,
+        rerollSlot: rerollSlot
     };
 })();
