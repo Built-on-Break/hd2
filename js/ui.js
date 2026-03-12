@@ -209,6 +209,9 @@ window.HD2UI = (function () {
             var nameEl = card.querySelector('.loadout-card__name');
             var imgEl = card.querySelector('.loadout-card__image img');
             finals.push({ name: nameEl.textContent, image: imgEl.src });
+
+            // Clear any onerror from renderCard so it doesn't interfere with cycling
+            imgEl.onerror = null;
             card.classList.add('card--spinning');
 
             var pool = getPoolForCard(card.id);
@@ -218,19 +221,20 @@ window.HD2UI = (function () {
                 var randItem = pool[Math.floor(Math.random() * pool.length)];
                 nameEl.textContent = randItem.name;
                 imgEl.src = randItem.image;
-            }, 70);
+            }, 80);
             activeSpinIntervals.push(intervalId);
 
             // Lock in after staggered delay
-            var stopDelay = 400 + index * 150;
+            var stopDelay = 500 + index * 180;
+            var revealed = false;
             setTimeout(function () {
                 clearInterval(intervalId);
-                // Set final content while still blurred so image can load
-                nameEl.textContent = finals[index].name;
-                imgEl.src = finals[index].image;
 
-                // Wait for image to load before revealing
                 var reveal = function () {
+                    if (revealed) return;
+                    revealed = true;
+                    imgEl.onerror = null;
+                    imgEl.onload = null;
                     card.classList.remove('card--spinning');
                     card.classList.add('card--locked');
                     setTimeout(function () {
@@ -238,15 +242,18 @@ window.HD2UI = (function () {
                     }, 400);
                 };
 
+                // Set final content while still blurred
+                nameEl.textContent = finals[index].name;
+                imgEl.onerror = reveal;
+                imgEl.onload = reveal;
+                imgEl.src = finals[index].image;
+
+                // If already cached, reveal on next frame
                 if (imgEl.complete) {
-                    // Image already cached, reveal after a tiny paint delay
                     requestAnimationFrame(reveal);
-                } else {
-                    imgEl.onload = reveal;
-                    imgEl.onerror = reveal;
-                    // Fallback in case load event doesn't fire
-                    setTimeout(reveal, 150);
                 }
+                // Safety fallback
+                setTimeout(reveal, 200);
             }, stopDelay);
         });
     }
