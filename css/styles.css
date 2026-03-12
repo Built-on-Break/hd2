@@ -763,6 +763,53 @@ button {
     color: var(--color-text-muted);
 }
 
+/* === WARBOND SUB-CATEGORIES === */
+.warbond-subcategory {
+    margin-bottom: var(--space-xs);
+}
+
+.warbond-subcategory__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--space-xs) var(--space-sm);
+    cursor: pointer;
+    user-select: none;
+    border-radius: var(--radius-sm);
+    transition: background var(--transition-fast);
+}
+
+.warbond-subcategory__header:hover {
+    background: var(--color-surface-elevated);
+}
+
+.warbond-subcategory__name {
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--color-text-muted);
+}
+
+.warbond-subcategory__expand {
+    font-size: 0.6rem;
+    color: var(--color-text-muted);
+    transition: transform var(--transition-fast);
+}
+
+.warbond-subcategory.expanded .warbond-subcategory__expand {
+    transform: rotate(180deg);
+}
+
+.warbond-subcategory__items {
+    display: none;
+    padding-left: var(--space-sm);
+}
+
+.warbond-subcategory.expanded .warbond-subcategory__items {
+    display: block;
+}
+
 /* === FOOTER === */
 .footer {
     text-align: center;

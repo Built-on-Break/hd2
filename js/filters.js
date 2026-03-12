@@ -145,6 +145,58 @@ window.HD2Filters = (function () {
         return grouped;
     }
 
+    function getItemTypeLabel(item) {
+        if (HD2Data.primaryWeapons.indexOf(item) !== -1) return 'Primary';
+        if (HD2Data.secondaryWeapons.indexOf(item) !== -1) return 'Secondary';
+        if (HD2Data.throwables.indexOf(item) !== -1) return 'Throwable';
+        if (HD2Data.boosters.indexOf(item) !== -1) return 'Booster';
+        if (HD2Data.armorCombos.indexOf(item) !== -1) return 'Armor';
+        if (HD2Data.stratagems.indexOf(item) !== -1) return 'Stratagem';
+        return '';
+    }
+
+    /**
+     * Get items grouped by warbond, then sub-grouped by item type.
+     */
+    function getItemsByWarbondGrouped() {
+        var allItems = getAllItems();
+        var typeOrder = ['Primary', 'Secondary', 'Throwable', 'Armor', 'Stratagem', 'Booster'];
+        var grouped = {};
+
+        HD2Data.warbonds.forEach(function (wb) {
+            var warbondItems = allItems.filter(function (item) {
+                return item.source === wb.id;
+            });
+
+            var subGroups = {};
+            warbondItems.forEach(function (item) {
+                var typeLabel = getItemTypeLabel(item);
+                if (!subGroups[typeLabel]) {
+                    subGroups[typeLabel] = [];
+                }
+                subGroups[typeLabel].push(item);
+            });
+
+            var orderedSubGroups = [];
+            typeOrder.forEach(function (type) {
+                if (subGroups[type] && subGroups[type].length > 0) {
+                    orderedSubGroups.push({
+                        type: type,
+                        items: subGroups[type]
+                    });
+                }
+            });
+
+            grouped[wb.id] = {
+                warbond: wb,
+                totalCount: warbondItems.length,
+                subGroups: orderedSubGroups
+            };
+        });
+
+        return grouped;
+    }
+
     return {
         init: init,
         toggleWarbond: toggleWarbond,
@@ -156,6 +208,7 @@ window.HD2Filters = (function () {
         getWarbondItemState: getWarbondItemState,
         selectAll: selectAll,
         deselectAll: deselectAll,
-        getItemsByWarbond: getItemsByWarbond
+        getItemsByWarbond: getItemsByWarbond,
+        getItemsByWarbondGrouped: getItemsByWarbondGrouped
     };
 })();

@@ -114,6 +114,17 @@
             });
         });
 
+        // Sub-category header click to expand/collapse
+        document.querySelectorAll('.warbond-subcategory__header').forEach(function (header) {
+            var newHeader = header.cloneNode(true);
+            header.parentNode.replaceChild(newHeader, header);
+
+            newHeader.addEventListener('click', function () {
+                var subcategory = this.closest('.warbond-subcategory');
+                subcategory.classList.toggle('expanded');
+            });
+        });
+
         // Warbond toggle switches
         document.querySelectorAll('[data-warbond-toggle]').forEach(function (checkbox) {
             checkbox.addEventListener('change', function (e) {

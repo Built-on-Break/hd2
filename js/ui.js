@@ -233,11 +233,12 @@ window.HD2UI = (function () {
         var container = document.getElementById('warbond-filters');
         container.innerHTML = '';
 
-        var grouped = HD2Filters.getItemsByWarbond();
+        var grouped = HD2Filters.getItemsByWarbondGrouped();
 
         HD2Data.warbonds.forEach(function (wb) {
             var group = grouped[wb.id];
-            if (!group || group.items.length === 0) return;
+            if (!group || group.totalCount === 0) return;
+            var isLargeWarbond = group.totalCount > 15;
 
             var div = document.createElement('div');
             div.className = 'warbond-group';
@@ -290,24 +291,46 @@ window.HD2UI = (function () {
                 '</div>' +
                 '<div class="warbond-group__items"></div>';
 
-            // Render items inside
+            // Render sub-categories inside
             var itemsContainer = div.querySelector('.warbond-group__items');
-            group.items.forEach(function (item) {
-                var itemDiv = document.createElement('div');
-                itemDiv.className = 'warbond-item';
+            group.subGroups.forEach(function (subGroup) {
+                var subDiv = document.createElement('div');
+                subDiv.className = 'warbond-subcategory';
+                if (!isLargeWarbond) {
+                    subDiv.classList.add('expanded');
+                }
+                subDiv.setAttribute('data-subcategory', subGroup.type);
 
-                var itemType = getItemTypeLabel(item);
-                var displayName = item.name || (item.weightClass + ' - ' + item.passiveName);
-                itemDiv.innerHTML =
-                    '<label class="toggle-switch toggle-switch--small" onclick="event.stopPropagation()">' +
-                        '<input type="checkbox" class="toggle-switch__input" data-item-toggle="' + item.id + '"' +
-                            (HD2Filters.isItemEnabled(item.id) ? ' checked' : '') + '>' +
-                        '<span class="toggle-switch__slider"></span>' +
-                    '</label>' +
-                    '<span class="warbond-item__name">' + displayName + '</span>' +
-                    '<span class="warbond-item__type">' + itemType + '</span>';
+                var subHeader = document.createElement('div');
+                subHeader.className = 'warbond-subcategory__header';
+                subHeader.innerHTML =
+                    '<span class="warbond-subcategory__name">' + subGroup.type + ' (' + subGroup.items.length + ')</span>' +
+                    '<span class="warbond-subcategory__expand">&#9660;</span>';
+                subDiv.appendChild(subHeader);
 
-                itemsContainer.appendChild(itemDiv);
+                var subItems = document.createElement('div');
+                subItems.className = 'warbond-subcategory__items';
+
+                subGroup.items.forEach(function (item) {
+                    var itemDiv = document.createElement('div');
+                    itemDiv.className = 'warbond-item';
+
+                    var itemType = getItemTypeLabel(item);
+                    var displayName = item.name || (item.weightClass + ' - ' + item.passiveName);
+                    itemDiv.innerHTML =
+                        '<label class="toggle-switch toggle-switch--small" onclick="event.stopPropagation()">' +
+                            '<input type="checkbox" class="toggle-switch__input" data-item-toggle="' + item.id + '"' +
+                                (HD2Filters.isItemEnabled(item.id) ? ' checked' : '') + '>' +
+                            '<span class="toggle-switch__slider"></span>' +
+                        '</label>' +
+                        '<span class="warbond-item__name">' + displayName + '</span>' +
+                        '<span class="warbond-item__type">' + itemType + '</span>';
+
+                    subItems.appendChild(itemDiv);
+                });
+
+                subDiv.appendChild(subItems);
+                itemsContainer.appendChild(subDiv);
             });
 
             container.appendChild(div);
