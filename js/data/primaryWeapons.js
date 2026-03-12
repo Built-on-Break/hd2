@@ -15,7 +15,7 @@ window.HD2Data.primaryWeapons = [
     { id: "br14-adjudicator", name: "BR-14 Adjudicator", category: "Assault Rifle", source: "democratic-detonation", image: "https://helldivers.wiki.gg/images/BR-14_Adjudicator_Primary_Render.png" },
     { id: "sta52-assault-rifle", name: "StA-52 Assault Rifle", category: "Assault Rifle", source: "killzone", image: "https://helldivers.wiki.gg/images/StA-52_Assault_Rifle_Primary_Render.png" },
     { id: "ma5c-assault-rifle", name: "MA5C Assault Rifle", category: "Assault Rifle", source: "halo-odst", image: "https://helldivers.wiki.gg/images/MA5C_Assault_Rifle_Primary_Render.png" },
-    { id: "argl21-one-two", name: "AR/GL-21 One-Two", category: "Assault Rifle", source: "python-commandos", image: "https://helldivers.wiki.gg/images/AR-GL-21_One-Two_Primary_Render.png" },
+    { id: "argl21-one-two", name: "AR/GL-21 One-Two", category: "Assault Rifle", source: "python-commandos", image: "https://helldivers.wiki.gg/images/AR-GL-21_One_Two_Primary_Render.png" },
     { id: "ar59-suppressor", name: "AR-59 Suppressor", category: "Assault Rifle", source: "redacted-regiment", image: "https://helldivers.wiki.gg/images/AR-59_Suppressor_Primary_Render.png" },
 
     // =====================================================================
