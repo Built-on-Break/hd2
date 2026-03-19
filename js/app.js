@@ -7,6 +7,7 @@
     var isFirstSquadRoll = true;
     var currentResult = null;
     var isSquadMode = false;
+    var isDailyMode = false;
     var currentSquadResults = null;
 
     function doRandomize() {
@@ -41,10 +42,14 @@
             setTimeout(function () {
                 emptyEl.style.display = 'none';
 
-                // Render content before showing so cards are ready
+                // Render content so card elements have final values ready
                 HD2UI.renderLoadout(result);
 
-                // Start in transparent state
+                // Immediately start casino spin — this masks final content
+                // with random items before anything is visible
+                HD2UI.casinoRevealCards(currentMode);
+
+                // Now show the grid in transparent state
                 loadoutEl.classList.remove('loadout--hidden');
                 loadoutEl.classList.add('loadout--entering');
                 randSection.classList.remove('randomize-section--hidden');
@@ -55,11 +60,6 @@
                 loadoutEl.classList.add('loadout--visible');
                 randSection.classList.add('randomize-section--visible');
 
-                // Start casino spin after the fade-in begins
-                setTimeout(function () {
-                    HD2UI.casinoRevealCards();
-                }, 150);
-
                 // Update URL hash so the loadout is shareable
                 history.replaceState(null, '', HD2Sharing.encodeLoadout(result, currentMode));
             }, 300);
@@ -67,7 +67,7 @@
         }
 
         HD2UI.renderLoadout(result);
-        HD2UI.casinoRevealCards();
+        HD2UI.casinoRevealCards(currentMode);
 
         // Update URL hash so the loadout is shareable
         history.replaceState(null, '', HD2Sharing.encodeLoadout(result, currentMode));
@@ -127,18 +127,36 @@
     function showCurrentView() {
         var soloLoadout = document.getElementById('loadout-display');
         var squadDisplay = document.getElementById('squad-display');
+        var dailyPanel = document.getElementById('daily-challenge');
         var emptyEl = document.getElementById('loadout-empty');
         var randSection = document.getElementById('randomize-section');
+        var diceBtn = document.getElementById('dice-btn');
 
-        // Hide both displays first
+        // Hide everything first
         soloLoadout.classList.add('loadout--hidden');
+        soloLoadout.classList.remove('loadout--entering', 'loadout--visible');
         squadDisplay.classList.add('squad-display--hidden');
+        dailyPanel.classList.add('daily-challenge--hidden');
+        randSection.classList.remove('randomize-section--entering', 'randomize-section--visible');
+
+        if (isDailyMode) {
+            // Daily takes over the whole view — no rolling allowed
+            emptyEl.style.display = 'none';
+            randSection.classList.add('randomize-section--hidden');
+            diceBtn.style.display = 'none';
+            dailyPanel.classList.remove('daily-challenge--hidden');
+            return;
+        }
+
+        // Restore dice button when not in daily mode
+        diceBtn.style.display = '';
 
         if (isSquadMode) {
             if (currentSquadResults) {
                 emptyEl.style.display = 'none';
                 squadDisplay.classList.remove('squad-display--hidden');
                 randSection.classList.remove('randomize-section--hidden');
+                randSection.classList.add('randomize-section--entering', 'randomize-section--visible');
                 HD2UI.renderSquadLoadout(currentSquadResults);
                 history.replaceState(null, '', HD2Sharing.encodeSquadLoadout(currentSquadResults, currentMode));
             } else {
@@ -152,7 +170,9 @@
             if (currentResult) {
                 emptyEl.style.display = 'none';
                 soloLoadout.classList.remove('loadout--hidden');
+                soloLoadout.classList.add('loadout--entering', 'loadout--visible');
                 randSection.classList.remove('randomize-section--hidden');
+                randSection.classList.add('randomize-section--entering', 'randomize-section--visible');
                 HD2UI.renderLoadout(currentResult);
                 history.replaceState(null, '', HD2Sharing.encodeLoadout(currentResult, currentMode));
             } else {
@@ -172,6 +192,13 @@
         btn.addEventListener('click', function () {
             isSquadMode = !isSquadMode;
             btn.classList.toggle('active', isSquadMode);
+
+            // Deactivate daily if turning on squad
+            if (isSquadMode && isDailyMode) {
+                isDailyMode = false;
+                document.getElementById('daily-btn').classList.remove('active');
+            }
+
             showCurrentView();
         });
     }
@@ -530,18 +557,131 @@
         });
     }
 
+    function initDailyChallenge() {
+        var dailyBtn = document.getElementById('daily-btn');
+
+        dailyBtn.addEventListener('click', function () {
+            isDailyMode = !isDailyMode;
+            dailyBtn.classList.toggle('active', isDailyMode);
+
+            // Deactivate squad if turning on daily
+            if (isDailyMode && isSquadMode) {
+                isSquadMode = false;
+                document.getElementById('squad-toggle-btn').classList.remove('active');
+            }
+
+            if (isDailyMode) {
+                renderDailyChallenge();
+            }
+
+            showCurrentView();
+        });
+    }
+
+    function renderDailyChallenge() {
+        var dailyPanel = document.getElementById('daily-challenge');
+        var daily = HD2Daily.generateDaily();
+
+        // Render date and difficulty
+        document.getElementById('daily-date').textContent = HD2Daily.formatDate(daily.date);
+        var diffEl = document.getElementById('daily-difficulty');
+        diffEl.textContent = daily.difficulty.label;
+        diffEl.style.color = daily.difficulty.color;
+        diffEl.style.borderColor = daily.difficulty.color;
+
+        // Render the loadout cards
+        HD2UI.renderCard('daily-primary', daily.primaryWeapon, 'Primary');
+        HD2UI.renderCard('daily-secondary', daily.secondaryWeapon, 'Secondary');
+        HD2UI.renderCard('daily-throwable', daily.throwable, 'Throwable');
+        HD2UI.renderCard('daily-booster', daily.booster, 'Booster');
+
+        // Armor
+        var armorCard = document.getElementById('daily-armor');
+        var armorNameEl = armorCard.querySelector('.loadout-card__name');
+        var armorImgEl = armorCard.querySelector('.loadout-card__image img');
+        armorNameEl.textContent = daily.armor.weightClass + ' - ' + daily.armor.passiveName;
+        if (daily.armor.image) {
+            armorImgEl.src = daily.armor.image;
+            armorImgEl.alt = daily.armor.passiveName;
+            armorImgEl.classList.remove('img-fallback');
+            armorImgEl.onerror = function () {
+                this.onerror = null;
+                this.src = 'images/placeholder.png';
+                this.classList.add('img-fallback');
+            };
+        }
+        armorCard.removeAttribute('data-category');
+
+        // Stratagems
+        for (var i = 0; i < 4; i++) {
+            HD2UI.renderCard('daily-strat-' + i, daily.stratagems[i], 'Stratagem ' + (i + 1));
+        }
+
+        // Stagger reveal the daily cards
+        var cards = dailyPanel.querySelectorAll('.loadout-card');
+        cards.forEach(function (card) { card.classList.add('card--hidden'); });
+        requestAnimationFrame(function () {
+            cards.forEach(function (card, index) {
+                setTimeout(function () {
+                    card.classList.remove('card--hidden');
+                    card.classList.add('card--revealed');
+                }, 100 + index * 80);
+            });
+        });
+
+        // Wire up copy button for daily
+        var copyBtn = document.getElementById('daily-copy-btn');
+        var newCopyBtn = copyBtn.cloneNode(true);
+        copyBtn.parentNode.replaceChild(newCopyBtn, copyBtn);
+        newCopyBtn.addEventListener('click', function () {
+            var lines = [];
+            lines.push('HD2 Daily Challenge - ' + HD2Daily.formatDate(daily.date) + ' [' + daily.difficulty.label + ']');
+            lines.push('');
+            lines.push('Primary: ' + daily.primaryWeapon.name);
+            lines.push('Secondary: ' + daily.secondaryWeapon.name);
+            lines.push('Throwable: ' + daily.throwable.name);
+            lines.push('Armor: ' + daily.armor.weightClass + ' - ' + daily.armor.passiveName);
+            for (var i = 0; i < daily.stratagems.length; i++) {
+                lines.push('Stratagem ' + (i + 1) + ': ' + daily.stratagems[i].name);
+            }
+            lines.push('Booster: ' + daily.booster.name);
+            lines.push('');
+            lines.push('Can you beat this on Super Helldive?');
+
+            copyToClipboard(lines.join('\n'), function () {
+                newCopyBtn.textContent = 'Copied!';
+                newCopyBtn.classList.add('copy-btn--copied');
+                setTimeout(function () {
+                    newCopyBtn.textContent = 'Copy Challenge';
+                    newCopyBtn.classList.remove('copy-btn--copied');
+                }, 1500);
+            });
+        });
+    }
+
+    function initAboutToggle() {
+        var btn = document.getElementById('about-toggle');
+        var content = document.getElementById('about-content');
+        btn.addEventListener('click', function () {
+            content.classList.toggle('visible');
+            btn.textContent = content.classList.contains('visible') ? 'Close' : 'About this tool';
+        });
+    }
+
     // Initialize on DOM ready
     document.addEventListener('DOMContentLoaded', function () {
         HD2Filters.init();
         initModeSelector();
         initModeHelp();
         initSquadToggle();
+        initDailyChallenge();
         initFilterPanel();
         initRandomizeButton();
         initDiceButton();
         initCopyButton();
         initShareButton();
         initCardClickHandlers();
+        initAboutToggle();
 
         // Try to restore a shared loadout from the URL hash
         loadFromHash();

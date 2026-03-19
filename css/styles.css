@@ -1016,15 +1016,83 @@ button {
     text-decoration: underline;
 }
 
-/* === SQUAD TOGGLE === */
-.squad-toggle {
+.footer__brand {
+    margin-bottom: var(--space-lg);
+}
+
+.footer__brand-name {
+    display: block;
+    font-size: 1.1rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    color: var(--color-text);
+}
+
+.footer__brand-tagline {
+    display: block;
+    font-size: 0.75rem;
+    color: var(--color-text-muted);
+    font-style: italic;
+    margin-top: 2px;
+}
+
+.footer__about {
+    margin-bottom: var(--space-md);
+}
+
+.footer__about-toggle {
+    font-size: 0.75rem;
+    color: var(--color-text-muted);
+    border: none;
+    background: none;
+    cursor: pointer;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    transition: color var(--transition-fast);
+}
+
+.footer__about-toggle:hover {
+    color: var(--color-primary);
+}
+
+.footer__about-content {
+    display: none;
+    max-width: 540px;
+    margin: var(--space-md) auto 0;
+    text-align: left;
+    line-height: 1.6;
+    color: var(--color-text-muted);
+    font-size: 0.8rem;
+}
+
+.footer__about-content.visible {
+    display: block;
+    animation: help-fade-in 0.2s ease-out;
+}
+
+.footer__about-content p + p {
+    margin-top: var(--space-sm);
+    color: var(--color-text);
+    font-weight: 600;
+    font-style: italic;
+}
+
+.footer__credits {
+    margin-top: var(--space-md);
+}
+
+/* === SECONDARY CONTROLS (Squad, Daily) === */
+.secondary-controls {
     display: flex;
     justify-content: center;
+    align-items: center;
+    gap: var(--space-sm);
     margin-bottom: var(--space-lg);
     margin-top: calc(-1 * var(--space-md));
 }
 
-.squad-toggle-btn {
+.secondary-btn {
     display: inline-flex;
     align-items: center;
     gap: var(--space-sm);
@@ -1040,19 +1108,96 @@ button {
     transition: all var(--transition-fast);
 }
 
-.squad-toggle-btn:hover {
+.secondary-btn:hover {
     color: var(--color-primary);
     border-color: var(--color-primary);
 }
 
-.squad-toggle-btn.active {
+.secondary-btn.active {
     background: var(--color-primary);
     color: var(--color-bg);
     border-color: var(--color-primary);
 }
 
-.squad-toggle-btn__icon {
+.secondary-btn__icon {
     flex-shrink: 0;
+}
+
+/* === DAILY CHALLENGE === */
+.daily-challenge {
+    margin-bottom: var(--space-xl);
+    border: 2px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+}
+
+.daily-challenge--hidden {
+    display: none;
+}
+
+.daily-challenge__header {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+    padding: var(--space-md) var(--space-lg);
+    background: var(--color-surface);
+    border-bottom: 1px solid var(--color-border);
+}
+
+.daily-challenge__title {
+    font-size: 0.9rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--color-primary);
+}
+
+.daily-challenge__date {
+    font-size: 0.8rem;
+    color: var(--color-text-muted);
+}
+
+.daily-challenge__difficulty {
+    margin-left: auto;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    padding: 2px 10px;
+    border-radius: var(--radius-sm);
+    border: 1px solid currentColor;
+}
+
+.daily-challenge__loadout {
+    padding: var(--space-md);
+}
+
+/* Daily challenge cards are not clickable */
+.daily-challenge .loadout-card {
+    cursor: default;
+}
+
+.daily-challenge .loadout-card:hover {
+    transform: none;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.daily-challenge__cta {
+    padding: var(--space-md) var(--space-lg);
+    background: var(--color-surface);
+    border-top: 1px solid var(--color-border);
+    text-align: center;
+}
+
+.daily-challenge__cta-text {
+    font-size: 0.85rem;
+    color: var(--color-text-muted);
+    margin-bottom: var(--space-sm);
+    line-height: 1.5;
+}
+
+.daily-challenge__cta-text strong {
+    color: var(--color-primary);
 }
 
 /* === SQUAD DISPLAY === */
@@ -1194,6 +1339,19 @@ button {
 
     .header__title {
         font-size: 1.4rem;
+    }
+
+    .secondary-controls {
+        flex-wrap: wrap;
+    }
+
+    .daily-challenge__header {
+        flex-wrap: wrap;
+        gap: var(--space-sm);
+    }
+
+    .daily-challenge__difficulty {
+        margin-left: 0;
     }
 
     .mode-selector {

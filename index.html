@@ -22,6 +22,7 @@
     <meta name="twitter:image" content="images/og-preview.png">
 
     <link rel="canonical" href="">
+    <link rel="icon" type="image/svg+xml" href="images/favicon.svg">
     <link rel="stylesheet" href="css/variables.css">
     <link rel="stylesheet" href="css/styles.css">
 
@@ -45,14 +46,20 @@
             <button class="mode-help-btn" id="mode-help-btn" aria-label="Mode descriptions">?</button>
         </div>
 
-        <!-- Squad Toggle -->
-        <div class="squad-toggle">
-            <button class="squad-toggle-btn" id="squad-toggle-btn">
-                <svg class="squad-toggle-btn__icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <!-- Secondary Controls -->
+        <div class="secondary-controls">
+            <button class="secondary-btn" id="squad-toggle-btn">
+                <svg class="secondary-btn__icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <circle cx="9" cy="7" r="4"/><path d="M2 21v-2a4 4 0 0 1 4-4h6a4 4 0 0 1 4 4v2"/>
                     <circle cx="19" cy="7" r="3"/><path d="M22 21v-1.5a3 3 0 0 0-3-3h-1"/>
                 </svg>
                 Squad Mode
+            </button>
+            <button class="secondary-btn" id="daily-btn">
+                <svg class="secondary-btn__icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
+                </svg>
+                Daily Challenge
             </button>
         </div>
 
@@ -142,6 +149,36 @@
             </div>
         </div>
 
+        <!-- Daily Challenge -->
+        <div class="daily-challenge daily-challenge--hidden" id="daily-challenge">
+            <div class="daily-challenge__header">
+                <span class="daily-challenge__title">Daily Challenge</span>
+                <span class="daily-challenge__date" id="daily-date"></span>
+                <span class="daily-challenge__difficulty" id="daily-difficulty"></span>
+            </div>
+            <div class="daily-challenge__loadout loadout" id="daily-loadout">
+                <div class="loadout__row loadout__row--equipment">
+                    <div class="loadout-card" id="daily-primary"><div class="loadout-card__label">Primary</div><div class="loadout-card__image"><img src="images/placeholder.png" alt=""></div><div class="loadout-card__name">--</div></div>
+                    <div class="loadout-card" id="daily-secondary"><div class="loadout-card__label">Secondary</div><div class="loadout-card__image"><img src="images/placeholder.png" alt=""></div><div class="loadout-card__name">--</div></div>
+                    <div class="loadout-card" id="daily-throwable"><div class="loadout-card__label">Throwable</div><div class="loadout-card__image"><img src="images/placeholder.png" alt=""></div><div class="loadout-card__name">--</div></div>
+                    <div class="loadout-card" id="daily-armor"><div class="loadout-card__label">Armor</div><div class="loadout-card__image"><img src="images/placeholder.png" alt=""></div><div class="loadout-card__name">--</div></div>
+                </div>
+                <div class="loadout__row loadout__row--stratagems">
+                    <div class="loadout-card" id="daily-strat-0"><div class="loadout-card__label">Stratagem 1</div><div class="loadout-card__image"><img src="images/placeholder.png" alt=""></div><div class="loadout-card__name">--</div></div>
+                    <div class="loadout-card" id="daily-strat-1"><div class="loadout-card__label">Stratagem 2</div><div class="loadout-card__image"><img src="images/placeholder.png" alt=""></div><div class="loadout-card__name">--</div></div>
+                    <div class="loadout-card" id="daily-strat-2"><div class="loadout-card__label">Stratagem 3</div><div class="loadout-card__image"><img src="images/placeholder.png" alt=""></div><div class="loadout-card__name">--</div></div>
+                    <div class="loadout-card" id="daily-strat-3"><div class="loadout-card__label">Stratagem 4</div><div class="loadout-card__image"><img src="images/placeholder.png" alt=""></div><div class="loadout-card__name">--</div></div>
+                </div>
+                <div class="loadout__row loadout__row--booster">
+                    <div class="loadout-card" id="daily-booster"><div class="loadout-card__label">Booster</div><div class="loadout-card__image"><img src="images/placeholder.png" alt=""></div><div class="loadout-card__name">--</div></div>
+                </div>
+            </div>
+            <div class="daily-challenge__cta">
+                <p class="daily-challenge__cta-text">Can you beat this on Super Helldive? Share your extraction screenshot!</p>
+                <button class="copy-btn" id="daily-copy-btn" title="Copy daily challenge to clipboard">Copy Challenge</button>
+            </div>
+        </div>
+
         <!-- Squad Display (hidden until squad mode activated) -->
         <div class="squad-display squad-display--hidden" id="squad-display"></div>
 
@@ -179,6 +216,19 @@
 
         <!-- Footer -->
         <footer class="footer">
+            <div class="footer__brand">
+                <span class="footer__brand-name">Built on Break</span>
+                <span class="footer__brand-tagline">Game tools built on lunch breaks</span>
+            </div>
+            <div class="footer__about">
+                <button class="footer__about-toggle" id="about-toggle">About this tool</button>
+                <div class="footer__about-content" id="about-content">
+                    <p>I kept running the same loadouts every game. Same weapons, same stratagems, same comfort picks. I wanted to break out of that but just picking random stuff yourself doesn't really work. You either end up with something completely unplayable or you chicken out and grab your usual kit anyway.</p>
+                    <p>So I built something that forces you out of your comfort zone without setting you up to fail. Every stratagem is scored for anti-tank and crowd clear, so Mission Ready mode always gives you something viable. Just not what you'd normally pick. Squad mode makes sure your whole team covers each other without any overlap.</p>
+                    <p>I put this together over a couple weeks after work, started running it with my friends, and figured other people might get something out of it too. The Helldivers community has given me a lot and I wanted to give something back.</p>
+                    <p>No ads. No tracking. No account. Just roll.</p>
+                </div>
+            </div>
             <div class="footer__support">
                 <a class="kofi-btn" href="https://ko-fi.com/builtonbreak" target="_blank" rel="noopener">
                     <svg class="kofi-btn__icon" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
@@ -187,8 +237,10 @@
                     Support this tool
                 </a>
             </div>
-            <p>Game data sourced from the <a href="https://helldivers.wiki.gg" target="_blank" rel="noopener">Helldivers Wiki</a></p>
-            <p>Not affiliated with Arrowhead Game Studios or Sony</p>
+            <div class="footer__credits">
+                <p>Game data sourced from the <a href="https://helldivers.wiki.gg" target="_blank" rel="noopener">Helldivers Wiki</a></p>
+                <p>Not affiliated with Arrowhead Game Studios or Sony</p>
+            </div>
         </footer>
     </div>
 
@@ -208,6 +260,7 @@
     <script src="js/randomizer.js"></script>
     <script src="js/ui.js"></script>
     <script src="js/sharing.js"></script>
+    <script src="js/daily.js"></script>
     <script src="js/app.js"></script>
 </body>
 </html>

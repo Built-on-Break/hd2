@@ -229,7 +229,7 @@ window.HD2UI = (function () {
      * Casino slot-machine reveal. Cards flicker and cycle through
      * random names (and images for stratagems), then lock in one by one.
      */
-    function casinoRevealCards() {
+    function casinoRevealCards(mode) {
         // Clear any running intervals from a previous animation
         activeSpinIntervals.forEach(function (id) { clearInterval(id); });
         activeSpinIntervals = [];
