@@ -40,12 +40,25 @@
 
             setTimeout(function () {
                 emptyEl.style.display = 'none';
-                loadoutEl.classList.remove('loadout--hidden');
-                randSection.classList.remove('randomize-section--hidden');
 
-                // Render content then casino reveal
+                // Render content before showing so cards are ready
                 HD2UI.renderLoadout(result);
-                HD2UI.casinoRevealCards();
+
+                // Start in transparent state
+                loadoutEl.classList.remove('loadout--hidden');
+                loadoutEl.classList.add('loadout--entering');
+                randSection.classList.remove('randomize-section--hidden');
+                randSection.classList.add('randomize-section--entering');
+
+                // Force layout calc, then trigger fade-in
+                void loadoutEl.offsetHeight;
+                loadoutEl.classList.add('loadout--visible');
+                randSection.classList.add('randomize-section--visible');
+
+                // Start casino spin after the fade-in begins
+                setTimeout(function () {
+                    HD2UI.casinoRevealCards();
+                }, 150);
 
                 // Update URL hash so the loadout is shareable
                 history.replaceState(null, '', HD2Sharing.encodeLoadout(result, currentMode));
@@ -84,10 +97,17 @@
 
             setTimeout(function () {
                 emptyEl.style.display = 'none';
-                document.getElementById('squad-display').classList.remove('squad-display--hidden');
-                randSection.classList.remove('randomize-section--hidden');
 
+                var squadDisplay = document.getElementById('squad-display');
                 HD2UI.renderSquadLoadout(currentSquadResults);
+
+                squadDisplay.classList.remove('squad-display--hidden');
+                randSection.classList.remove('randomize-section--hidden');
+                randSection.classList.add('randomize-section--entering');
+
+                void randSection.offsetHeight;
+                randSection.classList.add('randomize-section--visible');
+
                 HD2UI.staggerRevealSquadCards();
 
                 history.replaceState(null, '', HD2Sharing.encodeSquadLoadout(currentSquadResults, currentMode));
