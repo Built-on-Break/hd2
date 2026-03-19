@@ -86,7 +86,7 @@ window.HD2Data.primaryWeapons = [
     // SPECIAL WEAPONS
     // =====================================================================
 
-    { id: "jar5-dominator", name: "JAR-5 Dominator", category: "Special", source: "steeled-veterans", atScore: 1, image: "https://helldivers.wiki.gg/images/JAR-5_Dominator_Primary_Render.png" },
+    { id: "jar5-dominator", name: "JAR-5 Dominator", category: "Special", source: "steeled-veterans", image: "https://helldivers.wiki.gg/images/JAR-5_Dominator_Primary_Render.png" },
     { id: "vg70-variable", name: "VG-70 Variable", category: "Special", source: "control-group", ccScore: 1, image: "https://helldivers.wiki.gg/images/VG-70_Variable_Primary_Render.png" },
     { id: "flam66-torcher", name: "FLAM-66 Torcher", category: "Special", source: "freedoms-flame", ccScore: 2, image: "https://helldivers.wiki.gg/images/FLAM-66_Torcher_Primary_Render.png" },
 ];

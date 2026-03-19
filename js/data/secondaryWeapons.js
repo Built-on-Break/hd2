@@ -7,7 +7,7 @@ window.HD2Data.secondaryWeapons = [
 
     { id: "p2-peacemaker", name: "P-2 Peacemaker", category: "Pistol", source: "base", image: "https://helldivers.wiki.gg/images/P-2_Peacemaker_Secondary_Render.png" },
     { id: "p19-redeemer", name: "P-19 Redeemer", category: "Pistol", source: "helldivers-mobilize", ccScore: 1, image: "https://helldivers.wiki.gg/images/P-19_Redeemer_Secondary_Render.png" },
-    { id: "p4-senator", name: "P-4 Senator", category: "Pistol", source: "steeled-veterans", image: "https://helldivers.wiki.gg/images/P-4_Senator_Secondary_Render.png" },
+    { id: "p4-senator", name: "P-4 Senator", category: "Pistol", source: "steeled-veterans", atScore: 1, image: "https://helldivers.wiki.gg/images/P-4_Senator_Secondary_Render.png" },
     { id: "p113-verdict", name: "P-113 Verdict", category: "Pistol", source: "polar-patriots", image: "https://helldivers.wiki.gg/images/P-113_Verdict_Secondary_Render.png" },
     { id: "p92-warrant", name: "P-92 Warrant", category: "Pistol", source: "superstore", image: "https://helldivers.wiki.gg/images/P-92_Warrant_Secondary_Render.png" },
     { id: "m6c-socom-pistol", name: "M6C/SOCOM Pistol", category: "Pistol", source: "halo-odst", image: "https://helldivers.wiki.gg/images/M6C-SOCOM_Pistol_Secondary_Render.png" },

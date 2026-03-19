@@ -107,12 +107,12 @@ window.HD2Data.missionReadyConfig = {
         'emg-101-hmg-emplacement': 1,
         'egl-21-grenadier-battlement': 1,
 
-        // Backpacks (autonomous companions) — CC=1
-        'axar-23-guard-dog': 1,
+        // Backpacks (autonomous companions) — CC=2
+        'axar-23-guard-dog': 2,
         'axlas-5-guard-dog-rover': 1,
-        'axflam-75-hot-dog': 1,
-        'axarc-3-k-9': 1,
-        'axtx-13-dog-breath': 1,
+        'axflam-75-hot-dog': 2,
+        'axarc-3-k-9': 2,
+        'axtx-13-dog-breath': 2,
 
         // Vehicles — CC=2
         'exo-45-patriot-exosuit': 2,
@@ -135,11 +135,16 @@ window.HD2Data.missionReadyConfig = {
         'p11-stim-pistol': true,
         'cqc19-stun-lance': true,
         'cqc30-stun-baton': true,
+        'gp31-grenade-pistol': true,
+        'gp20-ultimatum': true,
+        'p35-re-educator': true,
+        'cqc73-entrenchment-tool': true,
 
         // Throwables
         'g23-stun': true,
         'g4-gas': true,
         'g3-smoke': true,
+        'g109-urchin': true,
         'g89-smokescreen': true,
         'gsh39-shield': true,
         'tm1-lure-mine': true,
