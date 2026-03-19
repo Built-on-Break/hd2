@@ -3,9 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HD2 Loadout Randomizer</title>
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' https://helldivers.wiki.gg; style-src 'self' 'unsafe-inline'; script-src 'self' https://plausible.io; connect-src 'self' https://plausible.io">
+    <title>HD2 Loadout Randomizer — Helldivers 2 Random Build Generator</title>
+    <meta name="description" content="Generate random Helldivers 2 loadouts with Mission Ready, Balanced, and Chaos modes. The only randomizer that guarantees a viable build with anti-tank and crowd control.">
+    <meta name="keywords" content="Helldivers 2, loadout randomizer, random build generator, HD2, stratagem randomizer, loadout builder">
+
+    <!-- Open Graph / Social Sharing -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="HD2 Loadout Randomizer — Helldivers 2 Random Build Generator">
+    <meta property="og:description" content="Generate random Helldivers 2 loadouts with Mission Ready, Balanced, and Chaos modes. The only randomizer that guarantees a viable build.">
+    <meta property="og:image" content="images/og-preview.png">
+    <meta property="og:url" content="">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="HD2 Loadout Randomizer — Helldivers 2 Random Build Generator">
+    <meta name="twitter:description" content="Generate random Helldivers 2 loadouts with Mission Ready, Balanced, and Chaos modes.">
+    <meta name="twitter:image" content="images/og-preview.png">
+
+    <link rel="canonical" href="">
     <link rel="stylesheet" href="css/variables.css">
     <link rel="stylesheet" href="css/styles.css">
+
+    <!-- Analytics: uncomment and set your domain when ready -->
+    <!-- <script defer data-domain="YOURDOMAIN.com" src="https://plausible.io/js/script.js"></script> -->
 </head>
 <body>
     <div class="app">
@@ -22,6 +43,17 @@
             <button class="mode-btn active" id="mode-balanced" data-mode="balanced" title="No duplicate categories, max 1 backpack, max 1 vehicle">Balanced</button>
             <button class="mode-btn" id="mode-chaos" data-mode="chaos" title="Pure random, no restrictions">Chaos</button>
             <button class="mode-help-btn" id="mode-help-btn" aria-label="Mode descriptions">?</button>
+        </div>
+
+        <!-- Squad Toggle -->
+        <div class="squad-toggle">
+            <button class="squad-toggle-btn" id="squad-toggle-btn">
+                <svg class="squad-toggle-btn__icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="9" cy="7" r="4"/><path d="M2 21v-2a4 4 0 0 1 4-4h6a4 4 0 0 1 4 4v2"/>
+                    <circle cx="19" cy="7" r="3"/><path d="M22 21v-1.5a3 3 0 0 0-3-3h-1"/>
+                </svg>
+                Squad Mode
+            </button>
         </div>
 
         <!-- Mode Descriptions -->
@@ -110,6 +142,9 @@
             </div>
         </div>
 
+        <!-- Squad Display (hidden until squad mode activated) -->
+        <div class="squad-display squad-display--hidden" id="squad-display"></div>
+
         <!-- Randomize Button (hidden until first roll) -->
         <div class="randomize-section randomize-section--hidden" id="randomize-section">
             <button class="randomize-btn" id="randomize-btn">
@@ -124,6 +159,7 @@
                 Randomize!
             </button>
             <button class="copy-btn" id="copy-btn" title="Copy loadout to clipboard">Copy Loadout</button>
+            <button class="copy-btn" id="share-btn" title="Copy shareable link to clipboard">Share Link</button>
         </div>
 
         <!-- Filter Panel -->
@@ -143,6 +179,14 @@
 
         <!-- Footer -->
         <footer class="footer">
+            <div class="footer__support">
+                <a class="kofi-btn" href="https://ko-fi.com/builtonbreak" target="_blank" rel="noopener">
+                    <svg class="kofi-btn__icon" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M7.5 3C4.5 3 2 5.5 2 8.5c0 5.5 10 12.5 10 12.5s10-7 10-12.5C22 5.5 19.5 3 16.5 3 14.36 3 12.5 4.26 12 5.01 11.5 4.26 9.64 3 7.5 3z"/>
+                    </svg>
+                    Support this tool
+                </a>
+            </div>
             <p>Game data sourced from the <a href="https://helldivers.wiki.gg" target="_blank" rel="noopener">Helldivers Wiki</a></p>
             <p>Not affiliated with Arrowhead Game Studios or Sony</p>
         </footer>
@@ -163,6 +207,7 @@
     <script src="js/filters.js"></script>
     <script src="js/randomizer.js"></script>
     <script src="js/ui.js"></script>
+    <script src="js/sharing.js"></script>
     <script src="js/app.js"></script>
 </body>
 </html>

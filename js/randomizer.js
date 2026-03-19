@@ -368,8 +368,81 @@ window.HD2Randomizer = (function () {
         return { error: 'Unknown slot type.' };
     }
 
+    /**
+     * Generate 4 complementary loadouts for a full squad.
+     * Stratagems are unique across all players; weapons/armor/boosters may overlap.
+     */
+    function randomizeSquad(mode) {
+        var usedStratIds = {};
+        var usedBoosterIds = {};
+        var loadouts = [];
+
+        for (var p = 0; p < 4; p++) {
+            // Boosters are unique across squad when possible
+            var availableBoosters = HD2Filters.getEnabledItems(HD2Data.boosters).filter(function (b) {
+                return !usedBoosterIds[b.id];
+            });
+            if (availableBoosters.length === 0) {
+                availableBoosters = HD2Filters.getEnabledItems(HD2Data.boosters);
+            }
+
+            var result = {
+                primaryWeapon: pickRandom(HD2Filters.getEnabledItems(HD2Data.primaryWeapons)),
+                secondaryWeapon: pickRandom(HD2Filters.getEnabledItems(HD2Data.secondaryWeapons)),
+                throwable: pickRandom(HD2Filters.getEnabledItems(HD2Data.throwables)),
+                armor: pickRandom(HD2Filters.getEnabledItems(HD2Data.armorCombos)),
+                booster: pickRandom(availableBoosters),
+                stratagems: null,
+                error: null
+            };
+
+            if (!result.primaryWeapon) return { error: 'No primary weapons enabled.' };
+            if (!result.secondaryWeapon) return { error: 'No secondary weapons enabled.' };
+            if (!result.throwable) return { error: 'No throwables enabled.' };
+            if (!result.armor) return { error: 'No armor combos enabled.' };
+            if (!result.booster) return { error: 'No boosters enabled.' };
+
+            // Filter out stratagems already used by other players
+            var enabledStratagems = HD2Filters.getEnabledItems(HD2Data.stratagems).filter(function (s) {
+                return !usedStratIds[s.id];
+            });
+
+            var stratagemResult;
+            if (mode === 'chaos') {
+                stratagemResult = randomizeChaos(enabledStratagems);
+            } else if (mode === 'mission-ready') {
+                var weaponATScore = (result.primaryWeapon.atScore || 0) +
+                                    (result.secondaryWeapon.atScore || 0) +
+                                    (result.throwable.atScore || 0);
+                var weaponCCScore = (result.primaryWeapon.ccScore || 0) +
+                                    (result.secondaryWeapon.ccScore || 0) +
+                                    (result.throwable.ccScore || 0);
+                stratagemResult = randomizeMissionReady(enabledStratagems, weaponATScore, weaponCCScore);
+            } else {
+                stratagemResult = randomizeBalanced(enabledStratagems);
+            }
+
+            if (stratagemResult.error) {
+                return { error: 'Player ' + (p + 1) + ': ' + stratagemResult.error };
+            }
+
+            result.stratagems = stratagemResult.stratagems;
+
+            // Mark these stratagems and booster as used
+            for (var i = 0; i < result.stratagems.length; i++) {
+                usedStratIds[result.stratagems[i].id] = true;
+            }
+            usedBoosterIds[result.booster.id] = true;
+
+            loadouts.push(result);
+        }
+
+        return { loadouts: loadouts };
+    }
+
     return {
         randomize: randomize,
-        rerollSlot: rerollSlot
+        rerollSlot: rerollSlot,
+        randomizeSquad: randomizeSquad
     };
 })();

@@ -3,10 +3,18 @@
  */
 (function () {
     var currentMode = 'balanced';
-    var isFirstRandomize = true;
+    var isFirstSoloRoll = true;
+    var isFirstSquadRoll = true;
     var currentResult = null;
+    var isSquadMode = false;
+    var currentSquadResults = null;
 
     function doRandomize() {
+        if (isSquadMode) {
+            doSquadRandomize();
+            return;
+        }
+
         HD2UI.hideError();
 
         var result = HD2Randomizer.randomize(currentMode);
@@ -21,8 +29,8 @@
         // Remove pulse from randomize button
         document.getElementById('randomize-btn').classList.remove('randomize-btn--pulse');
 
-        if (isFirstRandomize) {
-            isFirstRandomize = false;
+        if (isFirstSoloRoll) {
+            isFirstSoloRoll = false;
             var emptyEl = document.getElementById('loadout-empty');
             var loadoutEl = document.getElementById('loadout-display');
 
@@ -38,12 +46,114 @@
                 // Render content then casino reveal
                 HD2UI.renderLoadout(result);
                 HD2UI.casinoRevealCards();
+
+                // Update URL hash so the loadout is shareable
+                history.replaceState(null, '', HD2Sharing.encodeLoadout(result, currentMode));
             }, 300);
             return;
         }
 
         HD2UI.renderLoadout(result);
         HD2UI.casinoRevealCards();
+
+        // Update URL hash so the loadout is shareable
+        history.replaceState(null, '', HD2Sharing.encodeLoadout(result, currentMode));
+    }
+
+    function doSquadRandomize() {
+        HD2UI.hideError();
+
+        var squadResult = HD2Randomizer.randomizeSquad(currentMode);
+
+        if (squadResult.error) {
+            HD2UI.showError(squadResult.error);
+            return;
+        }
+
+        currentSquadResults = squadResult.loadouts;
+
+        // Remove pulse from randomize button
+        document.getElementById('randomize-btn').classList.remove('randomize-btn--pulse');
+
+        if (isFirstSquadRoll) {
+            isFirstSquadRoll = false;
+            var emptyEl = document.getElementById('loadout-empty');
+            var randSection = document.getElementById('randomize-section');
+
+            emptyEl.classList.add('loadout-empty--fading');
+
+            setTimeout(function () {
+                emptyEl.style.display = 'none';
+                document.getElementById('squad-display').classList.remove('squad-display--hidden');
+                randSection.classList.remove('randomize-section--hidden');
+
+                HD2UI.renderSquadLoadout(currentSquadResults);
+                HD2UI.staggerRevealSquadCards();
+
+                history.replaceState(null, '', HD2Sharing.encodeSquadLoadout(currentSquadResults, currentMode));
+            }, 300);
+            return;
+        }
+
+        HD2UI.renderSquadLoadout(currentSquadResults);
+        HD2UI.staggerRevealSquadCards();
+
+        history.replaceState(null, '', HD2Sharing.encodeSquadLoadout(currentSquadResults, currentMode));
+    }
+
+    /**
+     * Show the correct display state based on current mode and results.
+     */
+    function showCurrentView() {
+        var soloLoadout = document.getElementById('loadout-display');
+        var squadDisplay = document.getElementById('squad-display');
+        var emptyEl = document.getElementById('loadout-empty');
+        var randSection = document.getElementById('randomize-section');
+
+        // Hide both displays first
+        soloLoadout.classList.add('loadout--hidden');
+        squadDisplay.classList.add('squad-display--hidden');
+
+        if (isSquadMode) {
+            if (currentSquadResults) {
+                emptyEl.style.display = 'none';
+                squadDisplay.classList.remove('squad-display--hidden');
+                randSection.classList.remove('randomize-section--hidden');
+                HD2UI.renderSquadLoadout(currentSquadResults);
+                history.replaceState(null, '', HD2Sharing.encodeSquadLoadout(currentSquadResults, currentMode));
+            } else {
+                // No squad results yet — show empty state
+                emptyEl.style.display = '';
+                emptyEl.classList.remove('loadout-empty--fading');
+                randSection.classList.add('randomize-section--hidden');
+                document.getElementById('randomize-btn').classList.add('randomize-btn--pulse');
+            }
+        } else {
+            if (currentResult) {
+                emptyEl.style.display = 'none';
+                soloLoadout.classList.remove('loadout--hidden');
+                randSection.classList.remove('randomize-section--hidden');
+                HD2UI.renderLoadout(currentResult);
+                history.replaceState(null, '', HD2Sharing.encodeLoadout(currentResult, currentMode));
+            } else {
+                // No solo results yet — show empty state
+                emptyEl.style.display = '';
+                emptyEl.classList.remove('loadout-empty--fading');
+                randSection.classList.add('randomize-section--hidden');
+                document.getElementById('randomize-btn').classList.add('randomize-btn--pulse');
+            }
+        }
+    }
+
+    function initSquadToggle() {
+        var btn = document.getElementById('squad-toggle-btn');
+        HD2UI.buildSquadDOM();
+
+        btn.addEventListener('click', function () {
+            isSquadMode = !isSquadMode;
+            btn.classList.toggle('active', isSquadMode);
+            showCurrentView();
+        });
     }
 
     function initModeSelector() {
@@ -79,20 +189,72 @@
         });
     }
 
+    /**
+     * Copy text to clipboard with fallback for non-HTTPS contexts.
+     */
+    function copyToClipboard(text, onSuccess) {
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(text).then(onSuccess).catch(function () {
+                fallbackCopy(text, onSuccess);
+            });
+        } else {
+            fallbackCopy(text, onSuccess);
+        }
+    }
+
+    function fallbackCopy(text, onSuccess) {
+        var textarea = document.createElement('textarea');
+        textarea.value = text;
+        textarea.style.position = 'fixed';
+        textarea.style.opacity = '0';
+        document.body.appendChild(textarea);
+        textarea.select();
+        try {
+            document.execCommand('copy');
+            if (onSuccess) onSuccess();
+        } catch (e) {
+            // Copy failed silently
+        }
+        document.body.removeChild(textarea);
+    }
+
     function initCopyButton() {
         var btn = document.getElementById('copy-btn');
         btn.addEventListener('click', function () {
-            if (!currentResult) return;
-            var lines = [];
-            lines.push('Primary: ' + currentResult.primaryWeapon.name);
-            lines.push('Secondary: ' + currentResult.secondaryWeapon.name);
-            lines.push('Throwable: ' + currentResult.throwable.name);
-            lines.push('Armor: ' + currentResult.armor.weightClass + ' - ' + currentResult.armor.passiveName);
-            for (var i = 0; i < currentResult.stratagems.length; i++) {
-                lines.push('Stratagem ' + (i + 1) + ': ' + currentResult.stratagems[i].name);
+            var text;
+
+            if (isSquadMode) {
+                if (!currentSquadResults) return;
+                var allLines = [];
+                for (var p = 0; p < currentSquadResults.length; p++) {
+                    var r = currentSquadResults[p];
+                    allLines.push('=== Player ' + (p + 1) + ' ===');
+                    allLines.push('Primary: ' + r.primaryWeapon.name);
+                    allLines.push('Secondary: ' + r.secondaryWeapon.name);
+                    allLines.push('Throwable: ' + r.throwable.name);
+                    allLines.push('Armor: ' + r.armor.weightClass + ' - ' + r.armor.passiveName);
+                    for (var i = 0; i < r.stratagems.length; i++) {
+                        allLines.push('Stratagem ' + (i + 1) + ': ' + r.stratagems[i].name);
+                    }
+                    allLines.push('Booster: ' + r.booster.name);
+                    if (p < 3) allLines.push('');
+                }
+                text = allLines.join('\n');
+            } else {
+                if (!currentResult) return;
+                var lines = [];
+                lines.push('Primary: ' + currentResult.primaryWeapon.name);
+                lines.push('Secondary: ' + currentResult.secondaryWeapon.name);
+                lines.push('Throwable: ' + currentResult.throwable.name);
+                lines.push('Armor: ' + currentResult.armor.weightClass + ' - ' + currentResult.armor.passiveName);
+                for (var i = 0; i < currentResult.stratagems.length; i++) {
+                    lines.push('Stratagem ' + (i + 1) + ': ' + currentResult.stratagems[i].name);
+                }
+                lines.push('Booster: ' + currentResult.booster.name);
+                text = lines.join('\n');
             }
-            lines.push('Booster: ' + currentResult.booster.name);
-            navigator.clipboard.writeText(lines.join('\n')).then(function () {
+
+            copyToClipboard(text, function () {
                 btn.textContent = 'Copied!';
                 btn.classList.add('copy-btn--copied');
                 setTimeout(function () {
@@ -101,6 +263,104 @@
                 }, 1500);
             });
         });
+    }
+
+    function initShareButton() {
+        var btn = document.getElementById('share-btn');
+        btn.addEventListener('click', function () {
+            var url, hash;
+
+            if (isSquadMode) {
+                if (!currentSquadResults) return;
+                url = HD2Sharing.buildSquadShareURL(currentSquadResults, currentMode);
+                hash = HD2Sharing.encodeSquadLoadout(currentSquadResults, currentMode);
+            } else {
+                if (!currentResult) return;
+                url = HD2Sharing.buildShareURL(currentResult, currentMode);
+                hash = HD2Sharing.encodeLoadout(currentResult, currentMode);
+            }
+
+            // Update the browser URL without reloading
+            history.replaceState(null, '', hash);
+
+            copyToClipboard(url, function () {
+                btn.textContent = 'Link Copied!';
+                btn.classList.add('copy-btn--copied');
+                setTimeout(function () {
+                    btn.textContent = 'Share Link';
+                    btn.classList.remove('copy-btn--copied');
+                }, 1500);
+            });
+        });
+    }
+
+    /**
+     * Check for a shared loadout in the URL hash and restore it.
+     */
+    function loadFromHash() {
+        var hash = window.location.hash;
+        if (!hash || hash.length < 2) return false;
+
+        // Try squad first
+        var squadDecoded = HD2Sharing.decodeSquadHash(hash);
+        if (squadDecoded) {
+            var squadResults = HD2Sharing.resolveSquadLoadout(squadDecoded);
+            if (!squadResults) return false;
+
+            // Activate squad mode
+            isSquadMode = true;
+            isFirstSquadRoll = false;
+            document.getElementById('squad-toggle-btn').classList.add('active');
+
+            currentMode = squadDecoded.mode;
+            HD2Storage.saveMode(currentMode);
+            HD2UI.setActiveMode(currentMode);
+
+            currentSquadResults = squadResults;
+
+            var emptyEl = document.getElementById('loadout-empty');
+            var squadDisplay = document.getElementById('squad-display');
+            var randSection = document.getElementById('randomize-section');
+
+            emptyEl.style.display = 'none';
+            document.getElementById('loadout-display').classList.add('loadout--hidden');
+            squadDisplay.classList.remove('squad-display--hidden');
+            randSection.classList.remove('randomize-section--hidden');
+
+            HD2UI.renderSquadLoadout(squadResults);
+            HD2UI.staggerRevealSquadCards();
+
+            return true;
+        }
+
+        // Try solo
+        var decoded = HD2Sharing.decodeHash(hash);
+        if (!decoded) return false;
+
+        var result = HD2Sharing.resolveLoadout(decoded);
+        if (!result) return false;
+
+        // Set mode to match the shared loadout
+        currentMode = decoded.mode;
+        HD2Storage.saveMode(currentMode);
+        HD2UI.setActiveMode(currentMode);
+
+        // Display the loadout
+        currentResult = result;
+        isFirstSoloRoll = false;
+
+        var emptyEl = document.getElementById('loadout-empty');
+        var loadoutEl = document.getElementById('loadout-display');
+        var randSection = document.getElementById('randomize-section');
+
+        emptyEl.style.display = 'none';
+        loadoutEl.classList.remove('loadout--hidden');
+        randSection.classList.remove('randomize-section--hidden');
+
+        HD2UI.renderLoadout(result);
+        HD2UI.staggerRevealCards();
+
+        return true;
     }
 
     function initDiceButton() {
@@ -159,6 +419,9 @@
                 }
 
                 HD2UI.casinoRevealSingleCard(card.id);
+
+                // Update URL hash after reroll
+                history.replaceState(null, '', HD2Sharing.encodeLoadout(currentResult, currentMode));
             });
         });
     }
@@ -252,10 +515,15 @@
         HD2Filters.init();
         initModeSelector();
         initModeHelp();
+        initSquadToggle();
         initFilterPanel();
         initRandomizeButton();
         initDiceButton();
         initCopyButton();
+        initShareButton();
         initCardClickHandlers();
+
+        // Try to restore a shared loadout from the URL hash
+        loadFromHash();
     });
 })();

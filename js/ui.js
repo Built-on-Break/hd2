@@ -4,6 +4,24 @@
 window.HD2UI = (function () {
 
     /**
+     * Escape a string for safe insertion into HTML.
+     */
+    function esc(str) {
+        var div = document.createElement('div');
+        div.appendChild(document.createTextNode(str));
+        return div.innerHTML;
+    }
+
+    /**
+     * Sanitize a URL for use in HTML attributes. Only allows http(s) and data URIs.
+     */
+    function sanitizeURL(url) {
+        if (!url) return '';
+        if (/^https?:\/\//i.test(url) || /^data:image\//i.test(url)) return url;
+        return '';
+    }
+
+    /**
      * Render a loadout card with item data.
      */
     function renderCard(cardId, item, label) {
@@ -398,35 +416,38 @@ window.HD2UI = (function () {
             var headerStyle = '';
             var headerExtraClass = '';
             var iconHtml = '';
-            if (wb.image) {
-                headerStyle = ' style="background-image: url(\'' + wb.image + '\')"';
+            var safeImage = sanitizeURL(wb.image);
+            var safeIcon = sanitizeURL(wb.icon);
+            if (safeImage) {
+                headerStyle = ' style="background-image: url(&quot;' + esc(safeImage) + '&quot;)"';
             } else if (wb.type === 'base') {
                 headerExtraClass = ' warbond-group__header--base-game';
-                if (wb.icon) {
-                    iconHtml = '<img src="' + wb.icon + '" alt="" class="warbond-group__header__icon">';
+                if (safeIcon) {
+                    iconHtml = '<img src="' + esc(safeIcon) + '" alt="" class="warbond-group__header__icon">';
                 }
             } else if (wb.type === 'superstore') {
                 headerExtraClass = ' warbond-group__header--superstore';
-                if (wb.icon) {
-                    iconHtml = '<img src="' + wb.icon + '" alt="" class="warbond-group__header__icon">';
+                if (safeIcon) {
+                    iconHtml = '<img src="' + esc(safeIcon) + '" alt="" class="warbond-group__header__icon">';
                 }
             } else {
                 headerExtraClass = ' warbond-group__header--no-banner';
-                if (wb.icon) {
-                    iconHtml = '<img src="' + wb.icon + '" alt="" class="warbond-group__header__icon">';
+                if (safeIcon) {
+                    iconHtml = '<img src="' + esc(safeIcon) + '" alt="" class="warbond-group__header__icon">';
                 }
             }
 
+            var safeWbId = esc(wb.id);
             div.innerHTML =
-                '<div class="warbond-group__header' + headerExtraClass + '" data-warbond="' + wb.id + '"' + headerStyle + '>' +
+                '<div class="warbond-group__header' + headerExtraClass + '" data-warbond="' + safeWbId + '"' + headerStyle + '>' +
                     iconHtml +
-                    '<label class="toggle-switch" onclick="event.stopPropagation()">' +
-                        '<input type="checkbox" class="toggle-switch__input" data-warbond-toggle="' + wb.id + '"' +
+                    '<label class="toggle-switch" >' +
+                        '<input type="checkbox" class="toggle-switch__input" data-warbond-toggle="' + safeWbId + '"' +
                             (HD2Filters.isWarbondEnabled(wb.id) ? ' checked' : '') + '>' +
                         '<span class="toggle-switch__slider"></span>' +
                     '</label>' +
-                    '<span class="warbond-group__name">' + wb.name + '</span>' +
-                    '<span class="warbond-group__type' + typeClass + '">' + typeLabel + '</span>' +
+                    '<span class="warbond-group__name">' + esc(wb.name) + '</span>' +
+                    '<span class="warbond-group__type' + typeClass + '">' + esc(typeLabel) + '</span>' +
                     '<span class="warbond-group__expand">&#9660;</span>' +
                 '</div>' +
                 '<div class="warbond-group__items"></div>';
@@ -444,7 +465,7 @@ window.HD2UI = (function () {
                 var subHeader = document.createElement('div');
                 subHeader.className = 'warbond-subcategory__header';
                 subHeader.innerHTML =
-                    '<span class="warbond-subcategory__name">' + subGroup.type + ' (' + subGroup.items.length + ')</span>' +
+                    '<span class="warbond-subcategory__name">' + esc(subGroup.type) + ' (' + subGroup.items.length + ')</span>' +
                     '<span class="warbond-subcategory__expand">&#9660;</span>';
                 subDiv.appendChild(subHeader);
 
@@ -458,13 +479,13 @@ window.HD2UI = (function () {
                     var itemType = getItemTypeLabel(item);
                     var displayName = item.name || (item.weightClass + ' - ' + item.passiveName);
                     itemDiv.innerHTML =
-                        '<label class="toggle-switch toggle-switch--small" onclick="event.stopPropagation()">' +
-                            '<input type="checkbox" class="toggle-switch__input" data-item-toggle="' + item.id + '"' +
+                        '<label class="toggle-switch toggle-switch--small" >' +
+                            '<input type="checkbox" class="toggle-switch__input" data-item-toggle="' + esc(item.id) + '"' +
                                 (HD2Filters.isItemEnabled(item.id) ? ' checked' : '') + '>' +
                             '<span class="toggle-switch__slider"></span>' +
                         '</label>' +
-                        '<span class="warbond-item__name">' + displayName + '</span>' +
-                        '<span class="warbond-item__type">' + itemType + '</span>';
+                        '<span class="warbond-item__name">' + esc(displayName) + '</span>' +
+                        '<span class="warbond-item__type">' + esc(itemType) + '</span>';
 
                     subItems.appendChild(itemDiv);
                 });
@@ -542,6 +563,120 @@ window.HD2UI = (function () {
         }
     }
 
+    /**
+     * Build the squad display DOM with 4 player panels.
+     */
+    function buildSquadDOM() {
+        var container = document.getElementById('squad-display');
+        if (!container || container.children.length > 0) return;
+
+        for (var p = 0; p < 4; p++) {
+            var member = document.createElement('div');
+            member.className = 'squad-member';
+            member.setAttribute('data-player', p);
+
+            var header = document.createElement('div');
+            header.className = 'squad-member__header';
+            header.textContent = 'Player ' + (p + 1);
+            member.appendChild(header);
+
+            var loadout = document.createElement('div');
+            loadout.className = 'squad-member__loadout';
+
+            var slots = [
+                { id: 'sq' + p + '-primary', label: 'Primary' },
+                { id: 'sq' + p + '-secondary', label: 'Secondary' },
+                { id: 'sq' + p + '-throwable', label: 'Throwable' },
+                { id: 'sq' + p + '-armor', label: 'Armor' },
+                { id: 'sq' + p + '-booster', label: 'Booster' },
+                { id: 'sq' + p + '-strat-0', label: 'Strat 1' },
+                { id: 'sq' + p + '-strat-1', label: 'Strat 2' },
+                { id: 'sq' + p + '-strat-2', label: 'Strat 3' },
+                { id: 'sq' + p + '-strat-3', label: 'Strat 4' }
+            ];
+
+            for (var s = 0; s < slots.length; s++) {
+                var card = document.createElement('div');
+                card.className = 'loadout-card';
+                card.id = slots[s].id;
+                card.innerHTML =
+                    '<div class="loadout-card__label">' + esc(slots[s].label) + '</div>' +
+                    '<div class="loadout-card__image"><img src="images/placeholder.png" alt=""></div>' +
+                    '<div class="loadout-card__name">--</div>';
+                loadout.appendChild(card);
+            }
+
+            member.appendChild(loadout);
+            container.appendChild(member);
+        }
+    }
+
+    /**
+     * Render a single squad member's loadout.
+     */
+    function renderSquadMember(playerIndex, result) {
+        var prefix = 'sq' + playerIndex;
+        renderCard(prefix + '-primary', result.primaryWeapon, 'Primary');
+        renderCard(prefix + '-secondary', result.secondaryWeapon, 'Secondary');
+        renderCard(prefix + '-throwable', result.throwable, 'Throwable');
+        renderCard(prefix + '-booster', result.booster, 'Booster');
+
+        // Armor card
+        var armorCard = document.getElementById(prefix + '-armor');
+        if (armorCard && result.armor) {
+            var nameEl = armorCard.querySelector('.loadout-card__name');
+            var imgEl = armorCard.querySelector('.loadout-card__image img');
+            nameEl.textContent = result.armor.weightClass + ' - ' + result.armor.passiveName;
+            if (result.armor.image) {
+                imgEl.src = result.armor.image;
+                imgEl.alt = result.armor.passiveName;
+                imgEl.classList.remove('img-fallback');
+                imgEl.onerror = function () {
+                    this.onerror = null;
+                    this.src = 'images/placeholder.png';
+                    this.classList.add('img-fallback');
+                };
+            } else {
+                imgEl.src = 'images/placeholder.png';
+                imgEl.classList.add('img-fallback');
+            }
+            armorCard.removeAttribute('data-category');
+        }
+
+        // Stratagems
+        for (var i = 0; i < 4; i++) {
+            renderCard(prefix + '-strat-' + i, result.stratagems[i], 'Strat ' + (i + 1));
+        }
+    }
+
+    /**
+     * Render all 4 squad loadouts.
+     */
+    function renderSquadLoadout(results) {
+        for (var p = 0; p < results.length; p++) {
+            renderSquadMember(p, results[p]);
+        }
+    }
+
+    /**
+     * Stagger reveal for squad cards.
+     */
+    function staggerRevealSquadCards() {
+        var cards = document.querySelectorAll('#squad-display .loadout-card');
+        cards.forEach(function (card) {
+            card.classList.add('card--hidden');
+        });
+
+        requestAnimationFrame(function () {
+            cards.forEach(function (card, index) {
+                setTimeout(function () {
+                    card.classList.remove('card--hidden');
+                    card.classList.add('card--revealed');
+                }, 50 + index * 40);
+            });
+        });
+    }
+
     return {
         renderCard: renderCard,
         renderLoadout: renderLoadout,
@@ -556,6 +691,9 @@ window.HD2UI = (function () {
         renderFilterPanel: renderFilterPanel,
         updateWarbondCheckboxState: updateWarbondCheckboxState,
         updateAllWarbondCheckboxStates: updateAllWarbondCheckboxStates,
-        updateFilterCount: updateFilterCount
+        updateFilterCount: updateFilterCount,
+        buildSquadDOM: buildSquadDOM,
+        renderSquadLoadout: renderSquadLoadout,
+        staggerRevealSquadCards: staggerRevealSquadCards
     };
 })();

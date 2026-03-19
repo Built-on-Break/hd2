@@ -992,6 +992,149 @@ button {
     text-decoration: underline;
 }
 
+/* === SQUAD TOGGLE === */
+.squad-toggle {
+    display: flex;
+    justify-content: center;
+    margin-bottom: var(--space-lg);
+    margin-top: calc(-1 * var(--space-md));
+}
+
+.squad-toggle-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-sm);
+    padding: var(--space-xs) var(--space-md);
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--color-text-muted);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    background: transparent;
+    transition: all var(--transition-fast);
+}
+
+.squad-toggle-btn:hover {
+    color: var(--color-primary);
+    border-color: var(--color-primary);
+}
+
+.squad-toggle-btn.active {
+    background: var(--color-primary);
+    color: var(--color-bg);
+    border-color: var(--color-primary);
+}
+
+.squad-toggle-btn__icon {
+    flex-shrink: 0;
+}
+
+/* === SQUAD DISPLAY === */
+.squad-display {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-lg);
+    margin-bottom: var(--space-xl);
+}
+
+.squad-display--hidden {
+    display: none;
+}
+
+.squad-member {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: var(--space-md);
+    overflow: hidden;
+}
+
+.squad-member__header {
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--color-primary);
+    margin-bottom: var(--space-sm);
+    padding-bottom: var(--space-xs);
+    border-bottom: 1px solid var(--color-border);
+    text-align: center;
+}
+
+.squad-member__loadout {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 6px;
+}
+
+/* Compact cards inside squad panels */
+.squad-member .loadout-card {
+    padding: var(--space-xs);
+    border-radius: var(--radius-sm);
+    box-shadow: none;
+    cursor: default;
+}
+
+.squad-member .loadout-card:hover {
+    transform: none;
+    box-shadow: none;
+}
+
+.squad-member .loadout-card__label {
+    font-size: 0.55rem;
+    letter-spacing: 1px;
+    margin-bottom: 2px;
+}
+
+.squad-member .loadout-card__image {
+    width: 36px;
+    height: 36px;
+    margin: 0 auto 2px;
+}
+
+.squad-member .loadout-card__name {
+    font-size: 0.6rem;
+    min-height: 1.8em;
+    line-height: 1.2;
+}
+
+.squad-member .loadout-card::before {
+    height: 2px;
+}
+
+/* === KO-FI BUTTON === */
+.footer__support {
+    margin-bottom: var(--space-md);
+}
+
+.kofi-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-sm);
+    padding: var(--space-sm) var(--space-lg);
+    background: transparent;
+    border: 1px solid #ff5e5b;
+    border-radius: var(--radius-md);
+    color: #ff5e5b;
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all var(--transition-fast);
+}
+
+.kofi-btn:hover {
+    background: rgba(255, 94, 91, 0.1);
+    text-decoration: none;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(255, 94, 91, 0.2);
+}
+
+.kofi-btn__icon {
+    flex-shrink: 0;
+}
+
 /* === RESPONSIVE === */
 @media (max-width: 900px) {
     .loadout {
@@ -1053,6 +1196,14 @@ button {
         width: 100%;
         padding: var(--space-md);
     }
+
+    .squad-display {
+        grid-template-columns: 1fr;
+    }
+
+    .squad-member__loadout {
+        grid-template-columns: repeat(5, 1fr);
+    }
 }
 
 @media (max-width: 480px) {
@@ -1071,5 +1222,18 @@ button {
 
     .loadout-card__name {
         font-size: 0.75rem;
+    }
+
+    .squad-member__loadout {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    .squad-member .loadout-card__image {
+        width: 28px;
+        height: 28px;
+    }
+
+    .squad-member .loadout-card__name {
+        font-size: 0.55rem;
     }
 }
