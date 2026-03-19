@@ -59,6 +59,15 @@
         });
     }
 
+    function initModeHelp() {
+        var btn = document.getElementById('mode-help-btn');
+        var panel = document.getElementById('mode-help');
+        btn.addEventListener('click', function () {
+            panel.classList.toggle('mode-help--visible');
+            btn.classList.toggle('active');
+        });
+    }
+
     function initRandomizeButton() {
         var btn = document.getElementById('randomize-btn');
 
@@ -242,6 +251,7 @@
     document.addEventListener('DOMContentLoaded', function () {
         HD2Filters.init();
         initModeSelector();
+        initModeHelp();
         initFilterPanel();
         initRandomizeButton();
         initDiceButton();
