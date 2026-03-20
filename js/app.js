@@ -101,9 +101,17 @@
                 var squadDisplay = document.getElementById('squad-display');
                 HD2UI.renderSquadLoadout(currentSquadResults);
 
+                // Hide all cards before showing the container
+                var cards = squadDisplay.querySelectorAll('.loadout-card');
+                cards.forEach(function (card) {
+                    card.style.opacity = '0';
+                    card.style.transform = 'translateX(-20px)';
+                });
+
                 squadDisplay.classList.remove('squad-display--hidden');
                 randSection.classList.remove('randomize-section--hidden');
 
+                // Now stagger them in
                 HD2UI.staggerRevealSquadCards();
 
                 history.replaceState(null, '', HD2Sharing.encodeSquadLoadout(currentSquadResults, currentMode));

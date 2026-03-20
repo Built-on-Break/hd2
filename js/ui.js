@@ -159,7 +159,7 @@ window.HD2UI = (function () {
      * First-time stagger reveal (no roll-out needed).
      */
     function staggerRevealCards() {
-        var cards = document.querySelectorAll('.loadout-card');
+        var cards = document.querySelectorAll('#loadout-display .loadout-card');
 
         // Start all hidden
         cards.forEach(function (card) {
@@ -234,7 +234,7 @@ window.HD2UI = (function () {
         activeSpinIntervals.forEach(function (id) { clearInterval(id); });
         activeSpinIntervals = [];
 
-        var cards = document.querySelectorAll('.loadout-card');
+        var cards = document.querySelectorAll('#loadout-display .loadout-card');
         var finals = [];
         var preloadPromises = [];
 
