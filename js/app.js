@@ -104,6 +104,8 @@
                 squadDisplay.classList.remove('squad-display--hidden');
                 randSection.classList.remove('randomize-section--hidden');
 
+                HD2UI.staggerRevealSquadCards();
+
                 history.replaceState(null, '', HD2Sharing.encodeSquadLoadout(currentSquadResults, currentMode));
             }, 300);
             return;
@@ -653,6 +655,29 @@
         });
     }
 
+    function initImageCardButton() {
+        var btn = document.getElementById('image-card-btn');
+        btn.addEventListener('click', function () {
+            if (!currentResult) return;
+
+            btn.textContent = 'Generating...';
+            btn.disabled = true;
+
+            HD2ImageCard.generateCard(currentResult, currentMode).then(function () {
+                btn.textContent = 'Downloaded!';
+                btn.classList.add('copy-btn--copied');
+                setTimeout(function () {
+                    btn.textContent = 'Share as Image';
+                    btn.classList.remove('copy-btn--copied');
+                    btn.disabled = false;
+                }, 1500);
+            }).catch(function () {
+                btn.textContent = 'Share as Image';
+                btn.disabled = false;
+            });
+        });
+    }
+
     function initAboutToggle() {
         var btn = document.getElementById('about-toggle');
         var content = document.getElementById('about-content');
@@ -682,6 +707,7 @@
         initDiceButton();
         initCopyButton();
         initShareButton();
+        initImageCardButton();
         initCardClickHandlers();
         initAboutToggle();
 

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' https://helldivers.wiki.gg; style-src 'self' 'unsafe-inline'; script-src 'self' https://plausible.io; connect-src 'self' https://plausible.io">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' https://helldivers.wiki.gg https://images.weserv.nl data:; style-src 'self' 'unsafe-inline'; script-src 'self' https://plausible.io; connect-src 'self' https://plausible.io">
     <title>HD2 Loadout Randomizer — Helldivers 2 Random Build Generator</title>
     <meta name="description" content="Generate random Helldivers 2 loadouts with Mission Ready, Balanced, and Chaos modes. The only randomizer that guarantees a viable build with anti-tank and crowd control.">
     <meta name="keywords" content="Helldivers 2, loadout randomizer, random build generator, HD2, stratagem randomizer, loadout builder">
@@ -198,6 +198,7 @@
             <div class="action-btns">
                 <button class="copy-btn" id="copy-btn" title="Copy loadout to clipboard">Copy Loadout</button>
                 <button class="copy-btn" id="share-btn" title="Copy shareable link to clipboard">Share Link</button>
+                <button class="copy-btn" id="image-card-btn" title="Download loadout as shareable image">Share as Image</button>
             </div>
         </div>
 
@@ -262,6 +263,7 @@
     <script src="js/ui.js"></script>
     <script src="js/sharing.js"></script>
     <script src="js/daily.js"></script>
+    <script src="js/imageCard.js"></script>
     <script src="js/app.js"></script>
 </body>
 </html>

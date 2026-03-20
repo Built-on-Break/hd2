@@ -663,17 +663,24 @@ window.HD2UI = (function () {
      */
     function staggerRevealSquadCards() {
         var cards = document.querySelectorAll('#squad-display .loadout-card');
+
+        // Start all cards hidden
         cards.forEach(function (card) {
-            card.classList.add('card--hidden');
+            card.classList.remove('card--squad-revealed');
+            card.style.opacity = '0';
+            card.style.transform = 'translateX(-20px)';
         });
 
-        requestAnimationFrame(function () {
-            cards.forEach(function (card, index) {
-                setTimeout(function () {
-                    card.classList.remove('card--hidden');
-                    card.classList.add('card--revealed');
-                }, 50 + index * 40);
-            });
+        // Force layout so the hidden state is painted
+        void document.getElementById('squad-display').offsetHeight;
+
+        // Stagger reveal left to right
+        cards.forEach(function (card, index) {
+            setTimeout(function () {
+                card.style.opacity = '';
+                card.style.transform = '';
+                card.classList.add('card--squad-revealed');
+            }, 50 + index * 80);
         });
     }
 
