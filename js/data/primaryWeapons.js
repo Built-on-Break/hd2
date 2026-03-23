@@ -15,7 +15,7 @@ window.HD2Data.primaryWeapons = [
     { id: "br14-adjudicator", name: "BR-14 Adjudicator", category: "Assault Rifle", source: "democratic-detonation", ccScore: 1, image: "https://helldivers.wiki.gg/images/BR-14_Adjudicator_Primary_Render.png" },
     { id: "sta52-assault-rifle", name: "StA-52 Assault Rifle", category: "Assault Rifle", source: "killzone", ccScore: 1, image: "https://helldivers.wiki.gg/images/StA-52_Assault_Rifle_Primary_Render.png" },
     { id: "ma5c-assault-rifle", name: "MA5C Assault Rifle", category: "Assault Rifle", source: "halo-odst", ccScore: 1, image: "https://helldivers.wiki.gg/images/MA5C_Assault_Rifle_Primary_Render.png" },
-    { id: "argl21-one-two", name: "AR/GL-21 One-Two", category: "Assault Rifle", source: "python-commandos", ccScore: 2, image: "https://helldivers.wiki.gg/images/AR-GL-21_One_Two_Primary_Render.png" },
+    { id: "argl21-one-two", name: "AR/GL-21 One-Two", category: "Assault Rifle", source: "python-commandos", ccScore: 2, closesObjectives: true, image: "https://helldivers.wiki.gg/images/AR-GL-21_One_Two_Primary_Render.png" },
     { id: "ar59-suppressor", name: "AR-59 Suppressor", category: "Assault Rifle", source: "redacted-regiment", ccScore: 1, image: "https://helldivers.wiki.gg/images/AR-59_Suppressor_Primary_Render.png" },
 
     // =====================================================================
@@ -73,8 +73,8 @@ window.HD2Data.primaryWeapons = [
     // EXPLOSIVE WEAPONS
     // =====================================================================
 
-    { id: "r36-eruptor", name: "R-36 Eruptor", category: "Explosive", source: "democratic-detonation", atScore: 1, ccScore: 1, image: "https://helldivers.wiki.gg/images/R-36_Eruptor_Primary_Render.png" },
-    { id: "cb9-exploding-crossbow", name: "CB-9 Exploding Crossbow", category: "Explosive", source: "democratic-detonation", ccScore: 2, image: "https://helldivers.wiki.gg/images/CB-9_Exploding_Crossbow_Primary_Render.png" },
+    { id: "r36-eruptor", name: "R-36 Eruptor", category: "Explosive", source: "democratic-detonation", atScore: 1, ccScore: 1, closesObjectives: true, image: "https://helldivers.wiki.gg/images/R-36_Eruptor_Primary_Render.png" },
+    { id: "cb9-exploding-crossbow", name: "CB-9 Exploding Crossbow", category: "Explosive", source: "democratic-detonation", ccScore: 2, closesObjectives: true, image: "https://helldivers.wiki.gg/images/CB-9_Exploding_Crossbow_Primary_Render.png" },
 
     // =====================================================================
     // ARC WEAPONS

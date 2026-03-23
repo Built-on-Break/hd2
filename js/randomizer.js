@@ -226,48 +226,80 @@ window.HD2Randomizer = (function () {
     }
 
     /**
+     * Check if a loadout has at least one way to close bug holes / destroy fabricators.
+     * Checks primary, secondary, throwable, and stratagems.
+     */
+    function canCloseObjectives(result) {
+        if (result.primaryWeapon && result.primaryWeapon.closesObjectives) return true;
+        if (result.secondaryWeapon && result.secondaryWeapon.closesObjectives) return true;
+        if (result.throwable && result.throwable.closesObjectives) return true;
+
+        var config = HD2Data.missionReadyConfig;
+        for (var i = 0; i < result.stratagems.length; i++) {
+            if (config.closesObjectives[result.stratagems[i].id]) return true;
+        }
+
+        return false;
+    }
+
+    /**
      * Main randomization function.
      */
     function randomize(mode) {
-        var result = {
-            primaryWeapon: pickRandom(HD2Filters.getEnabledItems(HD2Data.primaryWeapons)),
-            secondaryWeapon: pickRandom(HD2Filters.getEnabledItems(HD2Data.secondaryWeapons)),
-            throwable: pickRandom(HD2Filters.getEnabledItems(HD2Data.throwables)),
-            armor: pickRandom(HD2Filters.getEnabledItems(HD2Data.armorCombos)),
-            booster: pickRandom(HD2Filters.getEnabledItems(HD2Data.boosters)),
-            stratagems: null,
-            error: null
-        };
+        // For balanced/mission-ready, retry the full loadout to guarantee
+        // objective-closing capability. Chaos mode has no restrictions.
+        var maxAttempts = (mode === 'chaos') ? 1 : 50;
 
-        // Check minimum items
-        if (!result.primaryWeapon) return { error: 'No primary weapons enabled.' };
-        if (!result.secondaryWeapon) return { error: 'No secondary weapons enabled.' };
-        if (!result.throwable) return { error: 'No throwables enabled.' };
-        if (!result.armor) return { error: 'No armor combos enabled.' };
-        if (!result.booster) return { error: 'No boosters enabled.' };
+        for (var attempt = 0; attempt < maxAttempts; attempt++) {
+            var result = {
+                primaryWeapon: pickRandom(HD2Filters.getEnabledItems(HD2Data.primaryWeapons)),
+                secondaryWeapon: pickRandom(HD2Filters.getEnabledItems(HD2Data.secondaryWeapons)),
+                throwable: pickRandom(HD2Filters.getEnabledItems(HD2Data.throwables)),
+                armor: pickRandom(HD2Filters.getEnabledItems(HD2Data.armorCombos)),
+                booster: pickRandom(HD2Filters.getEnabledItems(HD2Data.boosters)),
+                stratagems: null,
+                error: null
+            };
 
-        var enabledStratagems = HD2Filters.getEnabledItems(HD2Data.stratagems);
+            // Check minimum items
+            if (!result.primaryWeapon) return { error: 'No primary weapons enabled.' };
+            if (!result.secondaryWeapon) return { error: 'No secondary weapons enabled.' };
+            if (!result.throwable) return { error: 'No throwables enabled.' };
+            if (!result.armor) return { error: 'No armor combos enabled.' };
+            if (!result.booster) return { error: 'No boosters enabled.' };
 
-        var stratagemResult;
-        if (mode === 'chaos') {
-            stratagemResult = randomizeChaos(enabledStratagems);
-        } else if (mode === 'mission-ready') {
-            var weaponATScore = (result.primaryWeapon.atScore || 0) +
-                                (result.secondaryWeapon.atScore || 0) +
-                                (result.throwable.atScore || 0);
-            var weaponCCScore = (result.primaryWeapon.ccScore || 0) +
-                                (result.secondaryWeapon.ccScore || 0) +
-                                (result.throwable.ccScore || 0);
-            stratagemResult = randomizeMissionReady(enabledStratagems, weaponATScore, weaponCCScore);
-        } else {
-            stratagemResult = randomizeBalanced(enabledStratagems);
+            var enabledStratagems = HD2Filters.getEnabledItems(HD2Data.stratagems);
+
+            var stratagemResult;
+            if (mode === 'chaos') {
+                stratagemResult = randomizeChaos(enabledStratagems);
+            } else if (mode === 'mission-ready') {
+                var weaponATScore = (result.primaryWeapon.atScore || 0) +
+                                    (result.secondaryWeapon.atScore || 0) +
+                                    (result.throwable.atScore || 0);
+                var weaponCCScore = (result.primaryWeapon.ccScore || 0) +
+                                    (result.secondaryWeapon.ccScore || 0) +
+                                    (result.throwable.ccScore || 0);
+                stratagemResult = randomizeMissionReady(enabledStratagems, weaponATScore, weaponCCScore);
+            } else {
+                stratagemResult = randomizeBalanced(enabledStratagems);
+            }
+
+            if (stratagemResult.error) {
+                return { error: stratagemResult.error };
+            }
+
+            result.stratagems = stratagemResult.stratagems;
+
+            // For non-chaos modes, ensure the loadout can close objectives
+            if (mode === 'chaos' || canCloseObjectives(result)) {
+                return result;
+            }
+            // Otherwise retry with a new roll
         }
 
-        if (stratagemResult.error) {
-            return { error: stratagemResult.error };
-        }
-
-        result.stratagems = stratagemResult.stratagems;
+        // Fallback: return the last result even if it can't close objectives
+        // (only happens if filters are very restrictive)
         return result;
     }
 
@@ -376,6 +408,8 @@ window.HD2Randomizer = (function () {
         var usedStratIds = {};
         var usedBoosterIds = {};
         var loadouts = [];
+        var retries = 0;
+        var maxRetries = 50;
 
         for (var p = 0; p < 4; p++) {
             // Boosters are unique across squad when possible
@@ -427,6 +461,13 @@ window.HD2Randomizer = (function () {
             }
 
             result.stratagems = stratagemResult.stratagems;
+
+            // For non-chaos modes, ensure each player can close objectives
+            if (mode !== 'chaos' && !canCloseObjectives(result) && retries < maxRetries) {
+                retries++;
+                p--; // will be incremented by the for loop, netting to same player
+                continue;
+            }
 
             // Mark these stratagems and booster as used
             for (var i = 0; i < result.stratagems.length; i++) {
