@@ -246,6 +246,7 @@
 
         var factionBtns = document.querySelectorAll('.faction-btn');
         factionBtns.forEach(function (btn) {
+            btn.classList.remove('faction-btn--rolled');
             if (btn.dataset.faction === currentFaction) {
                 btn.classList.add('active');
             } else {
