@@ -191,7 +191,7 @@ window.HD2Data.factionConfig = {
         'sh-32-shield-generator-pack': 1.5,
         'sh-20-ballistic-shield-backpack': 1,
         'sh-51-directional-shield': 1,
-        'fx-12-shield-generator-relay': 1.5,
+        'fx-12-shield-generator-relay': 0.75,
         // Supply/support
         'b-1-supply-pack': 1.5,
         'b-100-portable-hellbomb': 1.5
