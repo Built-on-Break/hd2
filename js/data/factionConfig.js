@@ -130,6 +130,10 @@ window.HD2Data.factionConfig = {
             'sg225ie-breaker-incendiary': { ccScore: 3 },
             // Torcher excels vs bugs
             'flam66-torcher':           { ccScore: 3 },
+            // AT Emplacement is bad vs bugs — stationary, bugs swarm you
+            'eat-12-anti-tank-emplacement': { atScore: 1, eliteScore: 1 },
+            // HMG Emplacement same problem
+            'emg-101-hmg-emplacement': { eliteScore: 1 },
             // Cookout fire damage
             'sg451-cookout':            { ccScore: 3 }
         },
@@ -157,6 +161,8 @@ window.HD2Data.factionConfig = {
             'arc12-blitzer':            { ccScore: 1, eliteScore: 0 }
         },
         illuminate: {
+            // Emplacements are weaker vs illuminate — too mobile
+            'eat-12-anti-tank-emplacement': { atScore: 2, eliteScore: 1 },
             // High ROF weapons strip shields effectively
             'mg-43-machine-gun':        { eliteScore: 2 },
             'm-105-stalwart':           { eliteScore: 1 },
