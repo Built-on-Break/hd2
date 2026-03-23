@@ -207,7 +207,13 @@ window.HD2Randomizer = (function () {
      * Calculate a stratagem's synergy weight based on how much it addresses
      * remaining scoring deficits vs how redundant it would be.
      */
-    function calcSynergyWeight(candidate, deficits, faction, config) {
+    function getStratagemColor(s) {
+        if (s.category === 'support-weapon' || s.category === 'backpack' || s.category === 'vehicle') return 'blue';
+        if (s.category === 'orbital' || s.category === 'eagle') return 'red';
+        return 'green'; // sentry, emplacement
+    }
+
+    function calcSynergyWeight(candidate, deficits, faction, config, colorCounts) {
         var weight = 1; // base weight
 
         // How much does this candidate help fill remaining gaps?
@@ -243,18 +249,24 @@ window.HD2Randomizer = (function () {
             weight *= config.greenStratagemWeight;
         }
 
+        // Color diversity — penalize a color that already has 2+ picks
+        if (colorCounts) {
+            var color = getStratagemColor(candidate);
+            if (colorCounts[color] >= 2) weight *= 0.2;
+        }
+
         return weight;
     }
 
     /**
      * Pick from candidates using synergy-aware weighted random selection.
      */
-    function synergyWeightedPick(candidates, deficits, faction, config) {
+    function synergyWeightedPick(candidates, deficits, faction, config, colorCounts) {
         var weights = [];
         var totalWeight = 0;
 
         for (var i = 0; i < candidates.length; i++) {
-            var w = calcSynergyWeight(candidates[i], deficits, faction, config);
+            var w = calcSynergyWeight(candidates[i], deficits, faction, config, colorCounts);
             weights.push(w);
             totalWeight += w;
         }
@@ -304,9 +316,11 @@ window.HD2Randomizer = (function () {
             }
 
             // Prefer support weapons that address the largest deficit
-            var firstPick = synergyWeightedPick(supportPool, deficits, faction, config);
+            var colorCounts = { blue: 0, red: 0, green: 0 };
+            var firstPick = synergyWeightedPick(supportPool, deficits, faction, config, colorCounts);
             var selected = [firstPick];
             updateDeficits(deficits, firstPick, faction);
+            colorCounts[getStratagemColor(firstPick)]++;
 
             var failed = false;
 
@@ -324,9 +338,10 @@ window.HD2Randomizer = (function () {
                     break;
                 }
 
-                var pick = synergyWeightedPick(candidates, deficits, faction, config);
+                var pick = synergyWeightedPick(candidates, deficits, faction, config, colorCounts);
                 selected.push(pick);
                 updateDeficits(deficits, pick, faction);
+                colorCounts[getStratagemColor(pick)]++;
             }
 
             if (failed || selected.length !== 4) continue;
