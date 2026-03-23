@@ -19,5 +19,5 @@ window.HD2Data.throwables = [
     { id: "tm1-lure-mine", name: "TM-1 Lure Mine", source: "redacted-regiment", image: "https://helldivers.wiki.gg/images/TM-1_Lure_Mine_Throwable_Render.png" },
     { id: "k2-throwing-knife", name: "K-2 Throwing Knife", source: "viper-commandos", image: "https://helldivers.wiki.gg/images/K-2_Throwing_Knife_Throwable_Render.png" },
     { id: "ted63-dynamite", name: "TED-63 Dynamite", source: "borderline-justice", atScore: 1, eliteScore: 1, closesObjectives: true, image: "https://helldivers.wiki.gg/images/TED-63_Dynamite_Throwable_Render.png" },
-    { id: "g48-giga-grenade", name: "G-48 Giga Grenade", source: "entrenched-division", atScore: 1, ccScore: 1, eliteScore: 1, closesObjectives: true, image: "https://helldivers.wiki.gg/images/AGM-17_Giga_Grenade_Throwable_Icon.png" },
+    { id: "g48-giga-grenade", name: "G-48 Giga Grenade", source: "entrenched-division", ccScore: 1, eliteScore: 1, atScore: 2, closesObjectives: true, image: "https://helldivers.wiki.gg/images/AGM-17_Giga_Grenade_Throwable_Icon.png" },
 ];
