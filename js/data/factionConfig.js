@@ -144,6 +144,8 @@ window.HD2Data.factionConfig = {
         automatons: {
             // AT Emplacement — still good on bots but toned down
             'eat-12-anti-tank-emplacement': { atScore: 2 },
+            // 500kg is decent vs bots — can nuke heavy armor
+            'eagle-500kg-bomb': { atScore: 1 },
             // Fire weapons are weak vs bots (armor resists)
             'flam-40-flamethrower':     { ccScore: 1, eliteScore: 0 },
             'bflam-80-cremator':        { ccScore: 1, eliteScore: 0 },
