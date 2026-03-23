@@ -241,12 +241,15 @@ window.HD2Randomizer = (function () {
             if (nudge) weight += nudge;
         }
 
-        // Category balance weights (compensate for pool size imbalance)
-        if (candidate.category === 'orbital' || candidate.category === 'eagle') {
-            weight *= config.redStratagemWeight;
-        }
-        if (candidate.category === 'sentry' || candidate.category === 'emplacement') {
-            weight *= config.greenStratagemWeight;
+        // Category balance weights (only for items with combat scores)
+        var totalCombat = cc + elite + at;
+        if (totalCombat > 0) {
+            if (candidate.category === 'orbital' || candidate.category === 'eagle') {
+                weight *= config.redStratagemWeight;
+            }
+            if (candidate.category === 'sentry' || candidate.category === 'emplacement') {
+                weight *= config.greenStratagemWeight;
+            }
         }
 
         // Color diversity — penalize a color that already has 2+ picks
