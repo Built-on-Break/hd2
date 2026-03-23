@@ -193,8 +193,7 @@ window.HD2Data.factionConfig = {
         'sh-51-directional-shield': 1,
         'fx-12-shield-generator-relay': 0.75,
         // Supply/support
-        'b-1-supply-pack': 1.5,
-        'b-100-portable-hellbomb': 1.5
+        'b-1-supply-pack': 1.5
     },
 
     // Stratagems that require a one-handed weapon to be useful.
