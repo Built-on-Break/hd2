@@ -54,7 +54,7 @@ window.HD2Data.stratagems = [
     { id: "orbital-ems-strike", name: "Orbital EMS Strike", category: "orbital", subcategory: null, hasBackpack: false, ccScore: 1, source: "base", image: "https://helldivers.wiki.gg/images/Orbital_EMS_Strike_Stratagem_Icon.svg" },
     { id: "orbital-380mm-he-barrage", name: "Orbital 380mm HE Barrage", category: "orbital", subcategory: null, hasBackpack: false, ccScore: 2, eliteScore: 1, atScore: 1, source: "base", image: "https://helldivers.wiki.gg/images/Orbital_380mm_HE_Barrage_Stratagem_Icon.svg" },
     { id: "orbital-walking-barrage", name: "Orbital Walking Barrage", category: "orbital", subcategory: null, hasBackpack: false, eliteScore: 1, atScore: 1, source: "base", image: "https://helldivers.wiki.gg/images/Orbital_Walking_Barrage_Stratagem_Icon.svg" },
-    { id: "orbital-laser", name: "Orbital Laser", category: "orbital", subcategory: null, hasBackpack: false, atScore: 2, ccScore: 1, eliteScore: 2, source: "base", image: "https://helldivers.wiki.gg/images/Orbital_Laser_Stratagem_Icon.svg" },
+    { id: "orbital-laser", name: "Orbital Laser", category: "orbital", subcategory: null, hasBackpack: false, atScore: 1, eliteScore: 1, source: "base", image: "https://helldivers.wiki.gg/images/Orbital_Laser_Stratagem_Icon.svg" },
     { id: "orbital-napalm-barrage", name: "Orbital Napalm Barrage", category: "orbital", subcategory: null, hasBackpack: false, ccScore: 2, eliteScore: 1, source: "base", image: "https://helldivers.wiki.gg/images/Orbital_Napalm_Barrage_Stratagem_Icon.svg" },
     { id: "orbital-railcannon-strike", name: "Orbital Railcannon Strike", category: "orbital", subcategory: null, hasBackpack: false, eliteScore: 1, atScore: 2, source: "base", image: "https://helldivers.wiki.gg/images/Orbital_Railcannon_Strike_Stratagem_Icon.svg" },
 
@@ -68,7 +68,7 @@ window.HD2Data.stratagems = [
     { id: "eagle-smoke-strike", name: "Eagle Smoke Strike", category: "eagle", subcategory: null, hasBackpack: false, source: "base", image: "https://helldivers.wiki.gg/images/Eagle_Smoke_Strike_Stratagem_Icon.svg" },
     { id: "eagle-napalm-airstrike", name: "Eagle Napalm Airstrike", category: "eagle", subcategory: null, hasBackpack: false, ccScore: 2, source: "base", image: "https://helldivers.wiki.gg/images/Eagle_Napalm_Airstrike_Stratagem_Icon.svg" },
     { id: "eagle-110mm-rocket-pods", name: "Eagle 110mm Rocket Pods", category: "eagle", subcategory: null, hasBackpack: false, ccScore: 1, eliteScore: 1, source: "base", image: "https://helldivers.wiki.gg/images/Eagle_110mm_Rocket_Pods_Stratagem_Icon.svg" },
-    { id: "eagle-500kg-bomb", name: "Eagle 500kg Bomb", category: "eagle", subcategory: null, hasBackpack: false, atScore: 2, eliteScore: 1, source: "base", image: "https://helldivers.wiki.gg/images/Eagle_500kg_Bomb_Stratagem_Icon.svg" },
+    { id: "eagle-500kg-bomb", name: "Eagle 500kg Bomb", category: "eagle", subcategory: null, hasBackpack: false, atScore: 1, eliteScore: 1, source: "base", image: "https://helldivers.wiki.gg/images/Eagle_500kg_Bomb_Stratagem_Icon.svg" },
 
     // =====================================================================
     // SENTRIES
@@ -123,5 +123,5 @@ window.HD2Data.stratagems = [
     { id: "exo-45-patriot-exosuit", name: "EXO-45 Patriot Exosuit", category: "vehicle", subcategory: null, hasBackpack: false, ccScore: 2, eliteScore: 2, source: "base", image: "https://helldivers.wiki.gg/images/Patriot_Exosuit_Stratagem_Icon.svg" },
     { id: "exo-49-emancipator-exosuit", name: "EXO-49 Emancipator Exosuit", category: "vehicle", subcategory: null, hasBackpack: false, ccScore: 2, eliteScore: 2, source: "base", image: "https://helldivers.wiki.gg/images/Emancipator_Exosuit_Stratagem_Icon.svg" },
     { id: "m-102-fast-recon-vehicle", name: "M-102 Fast Recon Vehicle", category: "vehicle", subcategory: null, hasBackpack: false, ccScore: 1, source: "base", image: "https://helldivers.wiki.gg/images/Fast_Recon_Vehicle_Stratagem_Icon.svg" },
-    { id: "td-220-bastion-mk-xvi", name: "TD-220 Bastion MK XVI", category: "vehicle", subcategory: null, hasBackpack: false, atScore: 2, ccScore: 1, eliteScore: 2, source: "base", image: "https://helldivers.wiki.gg/images/Bastion_MK_XVI_Stratagem_Icon.svg" }
+    { id: "td-220-bastion-mk-xvi", name: "TD-220 Bastion MK XVI", category: "vehicle", subcategory: null, hasBackpack: false, atScore: 1, ccScore: 1, eliteScore: 1, source: "base", image: "https://helldivers.wiki.gg/images/Bastion_MK_XVI_Stratagem_Icon.svg" }
 ];
