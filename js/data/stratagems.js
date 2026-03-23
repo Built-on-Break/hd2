@@ -90,7 +90,7 @@ window.HD2Data.stratagems = [
 
     { id: "md-6-anti-personnel-minefield", name: "MD-6 Anti-Personnel Minefield", category: "emplacement", subcategory: null, hasBackpack: false, ccScore: 1, source: "base", image: "https://helldivers.wiki.gg/images/Anti-Personnel_Minefield_Stratagem_Icon.svg" },
     { id: "md-i4-incendiary-mines", name: "MD-I4 Incendiary Mines", category: "emplacement", subcategory: null, hasBackpack: false, ccScore: 2, source: "base", image: "https://helldivers.wiki.gg/images/Incendiary_Mines_Stratagem_Icon.svg" },
-    { id: "md-17-anti-tank-mines", name: "MD-17 Anti-Tank Mines", category: "emplacement", subcategory: null, hasBackpack: false, atScore: 1, source: "base", image: "https://helldivers.wiki.gg/images/Anti-Tank_Mines_Stratagem_Icon.svg" },
+    { id: "md-17-anti-tank-mines", name: "MD-17 Anti-Tank Mines", category: "emplacement", subcategory: null, hasBackpack: false, source: "base", image: "https://helldivers.wiki.gg/images/Anti-Tank_Mines_Stratagem_Icon.svg" },
     { id: "aarc-3-tesla-tower", name: "A/ARC-3 Tesla Tower", category: "emplacement", subcategory: null, hasBackpack: false, ccScore: 1, eliteScore: 1, source: "base", image: "https://helldivers.wiki.gg/images/Tesla_Tower_Stratagem_Icon.svg" },
     { id: "fx-12-shield-generator-relay", name: "FX-12 Shield Generator Relay", category: "emplacement", subcategory: null, hasBackpack: false, source: "base", image: "https://helldivers.wiki.gg/images/Shield_Generator_Relay_Stratagem_Icon.svg" },
     { id: "emg-101-hmg-emplacement", name: "E/MG-101 HMG Emplacement", category: "emplacement", subcategory: null, hasBackpack: false, ccScore: 1, eliteScore: 2, source: "base", image: "https://helldivers.wiki.gg/images/HMG_Emplacement_Stratagem_Icon.svg" },

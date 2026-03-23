@@ -98,6 +98,15 @@ window.HD2Randomizer = (function () {
         if (orbitalCount > 2) return true;             // Max 2 orbitals
         if (eagleCount > 2) return true;               // Max 2 eagles
 
+        // Max 1 expendable AT weapon
+        var expendableATCount = 0;
+        for (var i = 0; i < hypothetical.length; i++) {
+            if (hypothetical[i].category === 'support-weapon' && hypothetical[i].subcategory === 'expendable' && (hypothetical[i].atScore || 0) >= 1) {
+                expendableATCount++;
+            }
+        }
+        if (expendableATCount > 1) return true;
+
         // No persistent AT + expendable AT overlap
         // Persistent AT = main support weapon with atScore >= 2 (unless allowExpendableAT)
         // Expendable AT = expendable support weapon with atScore >= 1
