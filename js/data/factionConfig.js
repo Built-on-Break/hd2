@@ -132,8 +132,8 @@ window.HD2Data.factionConfig = {
             'flam66-torcher':           { ccScore: 3 },
             // Solo Silo is less useful vs bugs
             'ms-11-solo-silo': { atScore: 2 },
-            // 500kg is less impactful vs bugs — one big boom doesn't help with swarms
-            'eagle-500kg-bomb': { atScore: 1, ccScore: 0 },
+            // 500kg is decent vs bugs — can nuke Chargers/Bile Titans
+            'eagle-500kg-bomb': { atScore: 1 },
             // AT Emplacement is bad vs bugs — stationary, bugs swarm you
             'eat-12-anti-tank-emplacement': { atScore: 1, eliteScore: 1 },
             // HMG Emplacement same problem
@@ -169,8 +169,8 @@ window.HD2Data.factionConfig = {
         illuminate: {
             // Emplacements are weaker vs illuminate — too mobile
             'eat-12-anti-tank-emplacement': { atScore: 2, eliteScore: 1 },
-            // 500kg is decent but not best-in-class vs illuminate
-            'eagle-500kg-bomb': { atScore: 1 },
+            // 500kg is weakest vs illuminate — shields block it, targets are mobile
+            'eagle-500kg-bomb': { atScore: 1, ccScore: 0 },
             // High ROF weapons strip shields effectively
             'mg-43-machine-gun':        { eliteScore: 2 },
             'm-105-stalwart':           { eliteScore: 1 },
