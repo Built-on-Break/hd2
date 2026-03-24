@@ -1,2 +1,5 @@
 .claude/
 content/
+*.mkv
+*.mp4
+*.csv
